@@ -13,7 +13,7 @@ public class OrderItemAddRequestValidator : AbstractValidator<OrderItemAddReques
 
         RuleFor(o => o.Quantity)
             .NotNull().WithErrorCode("Quantity is required")
-            .NotEqual(0).WithErrorCode("Quantity can't be zero");
+            .GreaterThan(0).WithErrorCode("Quantity must be a positive value");
 
         RuleFor(o => o.Price)
             .NotNull().WithErrorCode("Price is required")
