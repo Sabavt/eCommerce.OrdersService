@@ -23,31 +23,28 @@ public class OrdersRepository : IOrdersRepository
     {
         var filter = Builders<Order>.Filter.Eq(o => o.OrderID, orderID);
         var order = await _ordersCollection.DeleteManyAsync(filter);
-        if (order.DeletedCount > 0)
-        {
-            return true;
-        }
-        else
-            return false;
+        
+        return order.DeletedCount > 0;
     }
 
-    public Task<IEnumerable<Order>> GetAllOrdersAsync()
+    public async Task<IEnumerable<Order>> GetAllOrdersAsync()
     {
-        throw new NotImplementedException();
+        return await _ordersCollection.FindAsync(_ => true).Result.ToListAsync();
     }
 
-    public Task<Order?> GetOrderByConditionAsync(FilterDefinition<Order> filter)
+    public async Task<Order?> GetOrderByConditionAsync(FilterDefinition<Order> filter)
     {
-        throw new NotImplementedException();
+        return await _ordersCollection.FindAsync(filter).Result.FirstOrDefaultAsync();
     }
 
-    public Task<IEnumerable<Order>?> GetOrdersByConditionAsync(FilterDefinition<Order> filter)
+    public async Task<IEnumerable<Order>?> GetOrdersByConditionAsync(FilterDefinition<Order> filter)
     {
-        throw new NotImplementedException();
+        return await _ordersCollection.FindAsync(filter).Result.ToListAsync();
     }
 
-    public Task<Order> UpdateOrderAsync(Order order)
+    public async Task<Order> UpdateOrderAsync(Order order)
     {
-        throw new NotImplementedException();
+        await _ordersCollection.ReplaceOneAsync(o => o.OrderID == order.OrderID, order);
+        return order;
     }
-}
+} 
