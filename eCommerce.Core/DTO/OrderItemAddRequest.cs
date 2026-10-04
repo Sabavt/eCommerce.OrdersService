@@ -6,8 +6,5 @@ public record OrderItemAddRequest(
     int Quantity
 )
 {
-    public OrderItemAddRequest() : this(Guid.Empty, null, 0)
-    {
-        
-    }
+    public OrderItemAddRequest() : this(Guid.Empty, null, 0) { }
 }
