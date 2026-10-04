@@ -1,4 +1,5 @@
-﻿using eCommerce.Core.Domain.Entities;
+﻿using AutoMapper;
+using eCommerce.Core.Domain.Entities;
 using eCommerce.Core.DTO;
 using eCommerce.Core.ServiceContracts;
 using MongoDB.Driver;
@@ -7,6 +8,13 @@ namespace eCommerce.Core.Services;
 
 public class OrdersService : IOrdersService
 {
+    private readonly IMapper _mapper;
+
+    public OrdersService(IMapper mapper)
+    {
+        _mapper = mapper;
+    }
+
     public Task<OrderResponse?> CreateOrderAsync(OrderAddRequest orderRequest, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
