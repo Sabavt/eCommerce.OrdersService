@@ -1,6 +1,22 @@
-﻿namespace eCommerce.Core.Validators;
+﻿using eCommerce.Core.DTO;
+using FluentValidation;
 
-public class OrderItemAddReuestValidator
+namespace eCommerce.Core.Validators;
+
+public class OrderItemAddRequestValidator : AbstractValidator<OrderItemAddRequest>
 {
+    public OrderItemAddRequestValidator()
+    {
+        RuleFor(o => o.ProductID)
+             .NotNull().WithErrorCode("ProductID is required")
+             .NotEmpty().WithErrorCode("ProductID can't be empty");
 
+        RuleFor(o => o.Quantity)
+            .NotNull().WithErrorCode("Quantity is required")
+            .NotEqual(0).WithErrorCode("Quantity can't be zero");
+
+        RuleFor(o => o.ProductID)
+            .NotNull().WithErrorCode("ProductID is required")
+            .NotEmpty().WithErrorCode("ProductID can't be empty");
+    }
 } 
