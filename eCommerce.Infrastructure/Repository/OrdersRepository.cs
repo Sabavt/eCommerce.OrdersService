@@ -12,14 +12,23 @@ public class OrdersRepository : IOrdersRepository
         _ordersCollection = mongoDatabase.GetCollection<Order>("Orders");
     }
 
-    public Task<Order> CreateOrderAsync(Order order)
+    public async Task<Order> CreateOrderAsync(Order order)
     {
-        throw new NotImplementedException();
+        order.OrderID = Guid.NewGuid();
+        await _ordersCollection.InsertOneAsync(order);
+        return order;
     }
 
-    public Task<bool> DeleteOrderAsync(Guid orderID)
+    public async Task<bool> DeleteOrderAsync(Guid orderID)
     {
-        throw new NotImplementedException();
+        var filter = Builders<Order>.Filter.Eq(o => o.OrderID, orderID);
+        var order = await _ordersCollection.DeleteManyAsync(filter);
+        if (order.DeletedCount > 0)
+        {
+            return true;
+        }
+        else
+            return false;
     }
 
     public Task<IEnumerable<Order>> GetAllOrdersAsync()
