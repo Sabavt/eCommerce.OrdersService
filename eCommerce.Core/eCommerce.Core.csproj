@@ -10,6 +10,8 @@
     <Folder Include="Domain\Entities\" />
     <Folder Include="Domain\RepositoryContracts\" />
     <Folder Include="DTO\" />
+    <Folder Include="Mappers\" />
+    <Folder Include="ValidationProfiles\" />
     <Folder Include="ServiceContracts\" />
     <Folder Include="Services\" />
   </ItemGroup>
