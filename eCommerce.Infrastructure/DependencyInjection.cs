@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using eCommerce.Core.Domain.RepositoryContracts;
+using eCommerce.Infrastructure.Repository;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 
@@ -11,11 +13,12 @@ public static class DependencyInjection
         string connectionStringTemplate = configuration.GetConnectionString("MongoDb")!;
         connectionStringTemplate.Replace("$MONGO_HOST", Environment.GetEnvironmentVariable("MONGO_HOST)")).Replace("$MONGO_PORT", Environment.GetEnvironmentVariable("MONGO_PORT"));
         services.AddSingleton<IMongoClient, MongoClient>(provider => new MongoClient(connectionStringTemplate));
-        services.AddScoped<IMongoDatabase>(provider =>
+        services.AddScoped(provider =>
         {
             var client = provider.GetRequiredService<IMongoClient>();
             return client.GetDatabase("OrdersDatabase");
         });
+        services.AddScoped<IOrdersRepository, OrdersRepository>();
         return services;
     }
 }
