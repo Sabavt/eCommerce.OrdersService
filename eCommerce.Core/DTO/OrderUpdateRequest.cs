@@ -1,6 +1,6 @@
 ﻿namespace eCommerce.Core.DTO;
 
-public record OrderUpdateReuest(
+public record OrderUpdateRequest(
     Guid Id,
     Guid UserID,
     DateTime OrderDate,
@@ -8,5 +8,5 @@ public record OrderUpdateReuest(
     List<OrderItemAddRequest> Items
 )
 {
-    public OrderUpdateReuest() : this(Guid.Empty ,Guid.Empty, DateTime.UtcNow, 0m, new List<OrderItemAddRequest>()) { }
+    public OrderUpdateRequest() : this(Guid.Empty ,Guid.Empty, DateTime.UtcNow, 0m, new List<OrderItemAddRequest>()) { }
 }
