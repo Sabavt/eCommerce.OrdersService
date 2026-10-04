@@ -6,6 +6,12 @@ namespace eCommerce.Infrastructure.Repository;
 
 public class OrdersRepository : IOrdersRepository
 {
+    private readonly IMongoCollection<Order> _ordersCollection;
+    public OrdersRepository(IMongoDatabase mongoDatabase)
+    {
+        _ordersCollection = mongoDatabase.GetCollection<Order>("Orders");
+    }
+
     public Task<Order> CreateOrderAsync(Order order)
     {
         throw new NotImplementedException();
