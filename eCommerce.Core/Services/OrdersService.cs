@@ -27,7 +27,7 @@ public class OrdersService : IOrdersService
         _ordersRepository = ordersRepository;
     }
 
-    public async Task<OrderResponse?> CreateOrderAsync(OrderAddRequest orderRequest, CancellationToken cancellationToken = default)
+    public async Task<OrderResponse?> CreateOrderAsync(OrderAddRequest? orderRequest, CancellationToken cancellationToken = default)
     {
         if(orderRequest == null)
         {
@@ -67,8 +67,23 @@ public class OrdersService : IOrdersService
         throw new NotImplementedException();
     }
 
-    public Task<OrderResponse?> UpdateOrderAsync(OrderUpdateRequest orderRequest, CancellationToken cancellationToken = default)
+    public async Task<OrderResponse?> UpdateOrderAsync(OrderUpdateRequest? orderRequest, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        if(orderRequest == null)
+        {
+            throw new ArgumentNullException(nameof(orderRequest));
+        }
+
+        await _orderUpdateRequestValidator.ValidateAndThrowAsync(orderRequest);
+
+        foreach(var item in orderRequest.Items)
+        {
+            await _orderItemUpdateRequestValidator.ValidateAndThrowAsync(item);
+        }
+
+        var order_to_update = _mapper.Map<Order>(orderRequest);
+        var order_from_db = await _ordersRepository.UpdateOrderAsync(order_to_update);
+        var order_updated = _mapper.Map<OrderResponse>(order_from_db);
+        return order_updated;
     }
-}
+} 
