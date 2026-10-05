@@ -29,6 +29,18 @@ public class OrdersService : IOrdersService
 
     public async Task<OrderResponse?> CreateOrderAsync(OrderAddRequest orderRequest, CancellationToken cancellationToken = default)
     {
+        if(orderRequest == null)
+        {
+            throw new ArgumentNullException(nameof(orderRequest));
+        }
+
+        await _orderAddRequestValidator.ValidateAndThrowAsync(orderRequest);
+
+        foreach(var item in orderRequest.Items)
+        {
+            await _orderItemAddRequestValidator.ValidateAndThrowAsync(item);
+        }
+
         var order_to_add = _mapper.Map<Order>(orderRequest);
         var order_from_db = await _ordersRepository.CreateOrderAsync(order_to_add);
         var order_added = _mapper.Map<OrderResponse>(order_from_db);
