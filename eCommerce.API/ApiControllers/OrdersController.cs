@@ -35,8 +35,9 @@ namespace eCommerce.API.ApiControllers
             }
         }
 
-        public async Task<IActionResult> GetOrderByConditionAsync(FilterDefinition<Order> filter, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetOrderByIDAsync(Guid orderID, CancellationToken cancellationToken)
         {
+            var filter = Builders<Order>.Filter.Eq(o => o.OrderID, orderID);
             var orderResponse = await _ordersService.GetOrderByConditionAsync(filter, cancellationToken);
             if (orderResponse != null)
             {
@@ -48,8 +49,16 @@ namespace eCommerce.API.ApiControllers
             }
         }
 
-        public async Task<IActionResult> GetOrdersByConditionAsync(FilterDefinition<Order> filter, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetOrdersByProductIDAsync(Guid productID, CancellationToken cancellationToken)
         {
+            var filter = Builders<Order>.Filter.ElemMatch(o => o.Items, item => item.ProductID == productID);
+            var ordersResponse = await _ordersService.GetOrdersByConditionAsync(filter, cancellationToken);
+            return Ok(ordersResponse);
+        }
+
+        public async Task<IActionResult> GetOrdersByOrderDateAsync(DateTime orderDate, CancellationToken cancellationToken)
+        {
+            var filter = Builders<Order>.Filter.Eq(o => o.OrderDate.ToString("yyyy-MM-dd"), orderDate.ToString("yyyy-MM-dd"));
             var ordersResponse = await _ordersService.GetOrdersByConditionAsync(filter, cancellationToken);
             return Ok(ordersResponse);
         }
