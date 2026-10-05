@@ -16,12 +16,14 @@ namespace eCommerce.API.ApiControllers
             _ordersService = ordersService;
         }
 
+        [HttpPost]
         public async Task<IActionResult> CreateOrderAsync(OrderAddRequest orderRequest, CancellationToken cancellationToken)
         {
             var orderResponse = await _ordersService.CreateOrderAsync(orderRequest, cancellationToken);
             return Ok(orderResponse);
         }
 
+        [HttpDelete("{orderID}")]
         public async Task<IActionResult> DeleteOrderAsync(Guid orderID, CancellationToken cancellationToken)
         {
             var result = await _ordersService.DeleteOrderAsync(orderID, cancellationToken);
@@ -35,6 +37,7 @@ namespace eCommerce.API.ApiControllers
             }
         }
 
+        [HttpGet("{orderID}")]
         public async Task<IActionResult> GetOrderByIDAsync(Guid orderID, CancellationToken cancellationToken)
         {
             var filter = Builders<Order>.Filter.Eq(o => o.OrderID, orderID);
@@ -49,6 +52,7 @@ namespace eCommerce.API.ApiControllers
             }
         }
 
+        [HttpGet("product/{productID}")]
         public async Task<IActionResult> GetOrdersByProductIDAsync(Guid productID, CancellationToken cancellationToken)
         {
             var filter = Builders<Order>.Filter.ElemMatch(o => o.Items, item => item.ProductID == productID);
@@ -63,6 +67,7 @@ namespace eCommerce.API.ApiControllers
             return Ok(ordersResponse);
         }
 
+        [HttpPut]
         public async Task<IActionResult> UpdateOrderAsync(OrderUpdateRequest orderRequest, CancellationToken cancellationToken)
         {
             var orderResponse = await _ordersService.UpdateOrderAsync(orderRequest, cancellationToken);
