@@ -3,17 +3,26 @@ using eCommerce.Core.Domain.Entities;
 using eCommerce.Core.Domain.RepositoryContracts;
 using eCommerce.Core.DTO;
 using eCommerce.Core.ServiceContracts;
+using FluentValidation;
 using MongoDB.Driver;
 
 namespace eCommerce.Core.Services;
 
 public class OrdersService : IOrdersService
 {
+    private readonly IValidator<OrderAddRequest> _orderAddRequestValidator;
+    private readonly IValidator<OrderUpdateRequest> _orderUpdateRequestValidator;
+    private readonly IValidator<OrderItemAddRequest> _orderItemAddRequestValidator;
+    private readonly IValidator<OrderItemUpdateRequest> _orderItemUpdateRequestValidator;
     private readonly IMapper _mapper;
     private readonly IOrdersRepository _ordersRepository;
 
-    public OrdersService(IMapper mapper, IOrdersRepository ordersRepository)
+    public OrdersService(IMapper mapper, IOrdersRepository ordersRepository, IValidator<OrderAddRequest> orderAddRequestValidator, IValidator<OrderUpdateRequest> orderUpdateRequestValidator, IValidator<OrderItemAddRequest> orderItemAddRequestValidator, IValidator<OrderItemUpdateRequest> orderItemUpdateRequestValidator)
     {
+        _orderAddRequestValidator = orderAddRequestValidator;
+        _orderItemAddRequestValidator = orderItemAddRequestValidator;
+        _orderUpdateRequestValidator = orderUpdateRequestValidator;
+        _orderItemUpdateRequestValidator = orderItemUpdateRequestValidator;
         _mapper = mapper;
         _ordersRepository = ordersRepository;
     }
