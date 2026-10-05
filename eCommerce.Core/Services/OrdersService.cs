@@ -47,24 +47,31 @@ public class OrdersService : IOrdersService
         return order_added;
     }
 
-    public Task<bool> DeleteOrderAsync(Guid orderID, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteOrderAsync(Guid orderID, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return await _ordersRepository.DeleteOrderAsync(orderID);
     }
 
-    public Task<OrderResponse?> GetOrderByConditionAsync(FilterDefinition<Order> filter, CancellationToken cancellationToken = default)
+    public async Task<OrderResponse?> GetOrderByConditionAsync(FilterDefinition<Order> filter, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var order = await _ordersRepository.GetOrderByConditionAsync(filter);
+        return order != null ? _mapper.Map<OrderResponse>(order) : null;
     }
 
-    public Task<List<OrderResponse?>> GetOrdersAsync(CancellationToken cancellationToken = default)
+    public async Task<List<OrderResponse?>> GetOrdersAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
-    }
+        var orders = await _ordersRepository.GetAllOrdersAsync();
+        return orders.Select(_mapper.Map<OrderResponse?>).ToList();
+    } 
 
-    public Task<List<OrderResponse?>> GetOrdersByConditionAsync(FilterDefinition<Order> filter, CancellationToken cancellationToken = default)
+    public async Task<List<OrderResponse?>> GetOrdersByConditionAsync(FilterDefinition<Order> filter, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var orders = await _ordersRepository.GetOrdersByConditionAsync(filter);
+        if(orders == null)
+        {
+            return new List<OrderResponse?>();
+        }
+        return orders.Select(_mapper.Map<OrderResponse?>).ToList();
     }
 
     public async Task<OrderResponse?> UpdateOrderAsync(OrderUpdateRequest? orderRequest, CancellationToken cancellationToken = default)
