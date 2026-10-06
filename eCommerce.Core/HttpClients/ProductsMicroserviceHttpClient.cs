@@ -8,14 +8,14 @@ public class ProductsMicroserviceHttpClient
         _httpClient = httpClient;
     }
 
-    public async Task<ProductDTO?> GetProductByIdAsync(Guid productId)
+    public async Task<ProductDTO?> GetProductByIdAsync(int productId)
     {
-        var response = await _httpClient.GetAsync($"/products/{productId}");
+        var response = await _httpClient.GetAsync($"search/{productId}");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<ProductDTO>();
     }
 
-    public async Task<bool> IsProductExistsAsync(Guid productId)
+    public async Task<bool> IsProductExistsAsync(int productId)
     {
         var product = await GetProductByIdAsync(productId);
         return product != null;

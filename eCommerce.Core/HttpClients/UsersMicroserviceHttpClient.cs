@@ -14,7 +14,7 @@ public class UsersMicroserviceHttpClient
 
     public async Task<UserDTO?> GetUserByIdAsync(Guid userId)
     {
-        var response = await _httpClient.GetAsync($"/authentication/{userId}");
+        var response = await _httpClient.GetAsync($"{userId}");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<UserDTO>();
     }
