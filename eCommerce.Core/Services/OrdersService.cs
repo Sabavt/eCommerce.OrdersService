@@ -18,14 +18,16 @@ public class OrdersService : IOrdersService
     private readonly IMapper _mapper;
     private readonly IOrdersRepository _ordersRepository;
     private readonly UsersMicroserviceHttpClient _usersMicroserviceHttpClient;
+    private readonly ProductsMicroserviceHttpClient _productsMicroserviceHttpClient;
 
-    public OrdersService(IMapper mapper, IOrdersRepository ordersRepository, IValidator<OrderAddRequest> orderAddRequestValidator, IValidator<OrderUpdateRequest> orderUpdateRequestValidator, IValidator<OrderItemAddRequest> orderItemAddRequestValidator, IValidator<OrderItemUpdateRequest> orderItemUpdateRequestValidator, UsersMicroserviceHttpClient usersMicroserviceHttpClient)
+    public OrdersService(IMapper mapper, IOrdersRepository ordersRepository, IValidator<OrderAddRequest> orderAddRequestValidator, IValidator<OrderUpdateRequest> orderUpdateRequestValidator, IValidator<OrderItemAddRequest> orderItemAddRequestValidator, IValidator<OrderItemUpdateRequest> orderItemUpdateRequestValidator, UsersMicroserviceHttpClient usersMicroserviceHttpClient, ProductsMicroserviceHttpClient productsMicroserviceHttpClient)
     {
         _orderAddRequestValidator = orderAddRequestValidator;
         _orderItemAddRequestValidator = orderItemAddRequestValidator;
         _orderUpdateRequestValidator = orderUpdateRequestValidator;
         _orderItemUpdateRequestValidator = orderItemUpdateRequestValidator;
         _usersMicroserviceHttpClient = usersMicroserviceHttpClient;
+        _productsMicroserviceHttpClient = productsMicroserviceHttpClient;
         _mapper = mapper;
         _ordersRepository = ordersRepository;
     }
@@ -40,6 +42,11 @@ public class OrdersService : IOrdersService
         if (!await _usersMicroserviceHttpClient.IsUserExistsAsync(orderRequest.UserID))
         {
             throw new ArgumentException($"User with ID {orderRequest.UserID} does not exist.");
+        }
+
+        if (!await _productsMicroserviceHttpClient.IsProductExistsAsync(orderRequest.Items[0].ProductID))
+        {
+            throw new ArgumentException($"Product with ID {orderRequest.Items[0].ProductID} does not exist.");
         }
 
         await _orderAddRequestValidator.ValidateAndThrowAsync(orderRequest);
@@ -92,6 +99,11 @@ public class OrdersService : IOrdersService
         if(!await _usersMicroserviceHttpClient.IsUserExistsAsync(orderRequest.UserID))
         {
             throw new ArgumentException($"User with ID {orderRequest.UserID} does not exist.");
+        }
+
+        if (!await _productsMicroserviceHttpClient.IsProductExistsAsync(orderRequest.Items[index: 0].ProductID))
+        {
+            throw new ArgumentException($"Product with ID {orderRequest.Items[0].ProductID} does not exist.");
         }
 
         await _orderUpdateRequestValidator.ValidateAndThrowAsync(orderRequest);

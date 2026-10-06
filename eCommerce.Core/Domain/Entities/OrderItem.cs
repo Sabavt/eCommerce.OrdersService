@@ -6,7 +6,7 @@ public class OrderItem
 {
     [BsonId]
     public string Id { get; set; } = Guid.NewGuid().ToString();
-    [BsonRepresentation(MongoDB.Bson.BsonType.Int32)]
+    [BsonRepresentation(MongoDB.Bson.BsonType.Int32)] 
     public int ProductID { get; set; }
     [BsonRepresentation(MongoDB.Bson.BsonType.Double)]
     public decimal? Price { get; set; } 
