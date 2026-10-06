@@ -34,7 +34,7 @@ public class OrdersService : IOrdersService
 
     public async Task<OrderResponse?> CreateOrderAsync(OrderAddRequest? orderRequest, CancellationToken cancellationToken = default)
     {
-        if(orderRequest == null)
+        if (orderRequest == null)
         {
             throw new ArgumentNullException(nameof(orderRequest));
         }
@@ -46,24 +46,17 @@ public class OrdersService : IOrdersService
 
         await ValidateOrderItems(orderRequest);
 
-        await _orderAddRequestValidator.ValidateAndThrowAsync(orderRequest); 
+        await _orderAddRequestValidator.ValidateAndThrowAsync(orderRequest);
 
         var order_to_add = _mapper.Map<Order>(orderRequest);
         var order_from_db = await _ordersRepository.CreateOrderAsync(order_to_add);
         var order_added = _mapper.Map<OrderResponse>(order_from_db);
 
-        await _usersMicroserviceHttpClient.GetUserByIdAsync(order_added.UserID).ContinueWith(userTask =>
-        {
-            if (userTask.Result != null)
-            {
-                order_added.PersonName = userTask.Result.Name;
-                order_added.Email = userTask.Result.Email;
-            }
-        });
+        await FillingUserDetailsForOrders(order_added);
 
         return order_added;
     }
-
+     
     public async Task<bool> DeleteOrderAsync(Guid orderID, CancellationToken cancellationToken = default)
     {
         return await _ordersRepository.DeleteOrderAsync(orderID);
@@ -78,11 +71,17 @@ public class OrdersService : IOrdersService
             foreach (var item in orderResponse.Items)
             {
                 var productFromProductService = await _productsMicroserviceHttpClient.GetProductByIdAsync(item.ProductID);
+                var userFromUserService = await _usersMicroserviceHttpClient.GetUserByIdAsync(orderResponse.UserID);
                 if (productFromProductService != null)
                 {
                     item.ProductName = productFromProductService.Name;
                     item.Quantity = productFromProductService.Quantity;
                     item.Category = productFromProductService.Category;
+                }
+                if (userFromUserService != null)
+                {
+                    orderResponse.PersonName = userFromUserService.Name;
+                    orderResponse.Email = userFromUserService.Email;
                 }
             }
         }
@@ -93,7 +92,8 @@ public class OrdersService : IOrdersService
     {
         var orders = await _ordersRepository.GetAllOrdersAsync();
         var orderResponses = orders.Select(_mapper.Map<OrderResponse?>).ToList();
-        await FillingProductsData(orderResponses);
+        await FillingProductsDataForOrders(orderResponses);
+        await FillingUserDetailsForOrders(orderResponses);
         return orderResponses;
     } 
 
@@ -105,7 +105,8 @@ public class OrdersService : IOrdersService
             return new List<OrderResponse?>();
         }
         var orderResponses = orders.Select(_mapper.Map<OrderResponse?>).ToList();
-        await FillingProductsData(orderResponses);
+        await FillingProductsDataForOrders(orderResponses);
+        await FillingUserDetailsForOrders(orderResponses);
         return orderResponses;
     }
 
@@ -136,7 +137,7 @@ public class OrdersService : IOrdersService
         return order_updated;
     }
 
-    private async Task FillingProductsData(List<OrderResponse?> orderResponses)
+    private async Task FillingProductsDataForOrders(List<OrderResponse?> orderResponses)
     {
         foreach (var orderResponse in orderResponses)
         {
@@ -154,6 +155,18 @@ public class OrdersService : IOrdersService
                 }
             }
         }
+    }
+
+    private async Task FillingUserDetailsForOrders(OrderResponse order_added)
+    {
+        await _usersMicroserviceHttpClient.GetUserByIdAsync(order_added.UserID).ContinueWith(userTask =>
+        {
+            if (userTask.Result != null)
+            {
+                order_added.PersonName = userTask.Result.Name;
+                order_added.Email = userTask.Result.Email;
+            }
+        });
     }
 
     private async Task ValidateOrderItems(OrderUpdateRequest orderRequest)
