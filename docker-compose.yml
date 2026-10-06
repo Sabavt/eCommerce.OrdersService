@@ -6,15 +6,23 @@ services:
       dockerfile: eCommerce.API/Dockerfile
       environment:
         - ASPNETCORE_ENVIRONMENT=Development
-        - MONGO_HOST=mongodb
+        - MONGO_HOST=ecommerce-network
         - MONGO_PORT=27017
         - MONGO_DB=ecommerce-orders-database 
       ports:
         - "5000:8080"
+      networks:
+        - ecommerce-network
   mongodb:
     image: mongo:latest
     container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
-      - mongodb_data:/data/db
+      - ../mongodb-data:/docker-entrypoint-initdb.d
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    driver: bridge
