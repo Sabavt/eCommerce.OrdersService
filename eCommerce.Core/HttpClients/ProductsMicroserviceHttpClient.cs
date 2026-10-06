@@ -1,4 +1,6 @@
-﻿namespace eCommerce.Core.HttpClients;
+﻿using eCommerce.Core.DTO;
+
+namespace eCommerce.Core.HttpClients;
 
 public class ProductsMicroserviceHttpClient
 {
