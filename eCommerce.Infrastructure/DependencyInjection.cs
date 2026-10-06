@@ -16,7 +16,7 @@ public static class DependencyInjection
         services.AddScoped(provider =>
         {
             var client = provider.GetRequiredService<IMongoClient>();
-            return client.GetDatabase("OrdersDatabase");
+            return client.GetDatabase(Environment.GetEnvironmentVariable("MONGO_DB"));
         });
         services.AddScoped<IOrdersRepository, OrdersRepository>();
         return services;
