@@ -24,7 +24,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ../mongodb-data:/docker-entrypoint-initdb.d:ro
+      - ../mongodb-data:/docker-entrypoint-initdb.d
     networks:
       - orders-mongo-network
 

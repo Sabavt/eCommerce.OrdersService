@@ -16,6 +16,13 @@ namespace eCommerce.API.ApiControllers
             _ordersService = ordersService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetOrdersAsync(CancellationToken cancellationToken)
+        {
+            var ordersResponse = await _ordersService.GetOrdersAsync(cancellationToken);
+            return Ok(ordersResponse);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateOrderAsync(OrderAddRequest orderRequest, CancellationToken cancellationToken)
         {
@@ -60,6 +67,7 @@ namespace eCommerce.API.ApiControllers
             return Ok(ordersResponse);
         }
 
+        [HttpGet("date/{orderDate}")]
         public async Task<IActionResult> GetOrdersByOrderDateAsync(DateTime orderDate, CancellationToken cancellationToken)
         {
             var filter = Builders<Order>.Filter.Eq(o => o.OrderDate, orderDate);
