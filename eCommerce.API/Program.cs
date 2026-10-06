@@ -20,11 +20,11 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 {
-    client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("UsersMicroservicePort")}/api/authentication/");
+    client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("USERS_MICROSERVICE_PORT")}/api/authentication/");
 });
 builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
 {
-    client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("ProductsMicroservicePort")}/api/products/");
+    client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_PORT")}/api/products/");
 });
 var app = builder.Build(); 
 app.UseSwagger();
