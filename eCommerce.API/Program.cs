@@ -1,5 +1,6 @@
 using eCommerce.API.Middlewares;
 using eCommerce.Core;
+using eCommerce.Core.HttpClients;
 using eCommerce.Infrastructure; 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,10 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod()
                .AllowAnyHeader();
     });
+});
+builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost5050/api");
 });
 var app = builder.Build(); 
 app.UseSwagger();
