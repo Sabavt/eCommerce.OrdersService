@@ -44,10 +44,7 @@ public class OrdersService : IOrdersService
             throw new ArgumentException($"User with ID {orderRequest.UserID} does not exist.");
         }
 
-        if (!await _productsMicroserviceHttpClient.IsProductExistsAsync(orderRequest.Items[0].ProductID))
-        {
-            throw new ArgumentException($"Product with ID {orderRequest.Items[0].ProductID} does not exist.");
-        }
+        await ValidateOrderItems(orderRequest);
 
         await _orderAddRequestValidator.ValidateAndThrowAsync(orderRequest);
 
@@ -97,6 +94,45 @@ public class OrdersService : IOrdersService
         var orderResponses = orders.Select(_mapper.Map<OrderResponse?>).ToList();
         await FillingProductsData(orderResponses);
         return orderResponses;
+    } 
+
+    public async Task<List<OrderResponse?>> GetOrdersByConditionAsync(FilterDefinition<Order> filter, CancellationToken cancellationToken = default)
+    {
+        var orders = await _ordersRepository.GetOrdersByConditionAsync(filter);
+        if(orders == null)
+        {
+            return new List<OrderResponse?>();
+        }
+        var orderResponses = orders.Select(_mapper.Map<OrderResponse?>).ToList();
+        await FillingProductsData(orderResponses);
+        return orderResponses;
+    }
+
+    public async Task<OrderResponse?> UpdateOrderAsync(OrderUpdateRequest? orderRequest, CancellationToken cancellationToken = default)
+    {
+        if (orderRequest == null)
+        {
+            throw new ArgumentNullException(nameof(orderRequest));
+        }
+
+        if (!await _usersMicroserviceHttpClient.IsUserExistsAsync(orderRequest.UserID))
+        {
+            throw new ArgumentException($"User with ID {orderRequest.UserID} does not exist.");
+        }
+
+        await ValidateOrderItems(orderRequest);
+
+        await _orderUpdateRequestValidator.ValidateAndThrowAsync(orderRequest);
+
+        foreach (var item in orderRequest.Items)
+        {
+            await _orderItemUpdateRequestValidator.ValidateAndThrowAsync(item);
+        }
+
+        var order_to_update = _mapper.Map<Order>(orderRequest);
+        var order_from_db = await _ordersRepository.UpdateOrderAsync(order_to_update);
+        var order_updated = _mapper.Map<OrderResponse>(order_from_db);
+        return order_updated;
     }
 
     private async Task FillingProductsData(List<OrderResponse?> orderResponses)
@@ -119,45 +155,14 @@ public class OrdersService : IOrdersService
         }
     }
 
-    public async Task<List<OrderResponse?>> GetOrdersByConditionAsync(FilterDefinition<Order> filter, CancellationToken cancellationToken = default)
+    private async Task ValidateOrderItems(OrderUpdateRequest orderRequest)
     {
-        var orders = await _ordersRepository.GetOrdersByConditionAsync(filter);
-        if(orders == null)
-        {
-            return new List<OrderResponse?>();
-        }
-        var orderResponses = orders.Select(_mapper.Map<OrderResponse?>).ToList();
-        await FillingProductsData(orderResponses);
-        return orderResponses;
-    }
-
-    public async Task<OrderResponse?> UpdateOrderAsync(OrderUpdateRequest? orderRequest, CancellationToken cancellationToken = default)
-    {
-        if(orderRequest == null)
-        {
-            throw new ArgumentNullException(nameof(orderRequest));
-        }
-
-        if(!await _usersMicroserviceHttpClient.IsUserExistsAsync(orderRequest.UserID))
-        {
-            throw new ArgumentException($"User with ID {orderRequest.UserID} does not exist.");
-        }
-
-        if (!await _productsMicroserviceHttpClient.IsProductExistsAsync(orderRequest.Items[index: 0].ProductID))
-        {
-            throw new ArgumentException($"Product with ID {orderRequest.Items[0].ProductID} does not exist.");
-        }
-
-        await _orderUpdateRequestValidator.ValidateAndThrowAsync(orderRequest);
-
         foreach(var item in orderRequest.Items)
         {
-            await _orderItemUpdateRequestValidator.ValidateAndThrowAsync(item);
-        }
-
-        var order_to_update = _mapper.Map<Order>(orderRequest);
-        var order_from_db = await _ordersRepository.UpdateOrderAsync(order_to_update);
-        var order_updated = _mapper.Map<OrderResponse>(order_from_db);
-        return order_updated;
+            if (!await _productsMicroserviceHttpClient.IsProductExistsAsync(item.ProductID))
+            {
+                throw new ArgumentException($"Product with ID {item.ProductID} does not exist.");
+            }
+        }) 
     }
 } 
