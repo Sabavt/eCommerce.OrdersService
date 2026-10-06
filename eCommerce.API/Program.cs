@@ -22,6 +22,10 @@ builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 {
     client.BaseAddress = new Uri($"http://localhost:{builder.Configuration.GetValue<int>("UsersMicroservice:Port")}/api");
 });
+builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
+{
+    client.BaseAddress = new Uri($"http://localhost:{builder.Configuration.GetValue<int>("ProductsMicroservice:Port")}/api");
+});
 var app = builder.Build(); 
 app.UseSwagger();
 app.UseSwaggerUI();

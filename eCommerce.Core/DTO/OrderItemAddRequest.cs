@@ -1,10 +1,10 @@
 ﻿namespace eCommerce.Core.DTO;
 
 public record OrderItemAddRequest(
-    Guid ProductID,
+    int ProductID,
     decimal? Price,
     int Quantity
 )
 {
-    public OrderItemAddRequest() : this(Guid.Empty, null, 0) { }
+    public OrderItemAddRequest() : this(0, null, 0) { }
 }

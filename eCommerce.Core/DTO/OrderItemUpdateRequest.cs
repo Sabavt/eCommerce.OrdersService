@@ -2,10 +2,10 @@
 
 public record OrderItemUpdateRequest(
     Guid Id,
-    Guid ProductID,
+    int ProductID,
     decimal? Price,
     int Quantity
 )
 {
-    public OrderItemUpdateRequest() : this(Guid.Empty, Guid.Empty, null, 0) { }
+    public OrderItemUpdateRequest() : this(Guid.Empty, 0, null, 0) { }
 } 
