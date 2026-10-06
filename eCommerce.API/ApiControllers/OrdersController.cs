@@ -62,7 +62,7 @@ namespace eCommerce.API.ApiControllers
 
         public async Task<IActionResult> GetOrdersByOrderDateAsync(DateTime orderDate, CancellationToken cancellationToken)
         {
-            var filter = Builders<Order>.Filter.Eq(o => o.OrderDate.ToString("yyyy-MM-dd"), orderDate.ToString("yyyy-MM-dd"));
+            var filter = Builders<Order>.Filter.Eq(o => o.OrderDate, orderDate);
             var ordersResponse = await _ordersService.GetOrdersByConditionAsync(filter, cancellationToken);
             return Ok(ordersResponse);
         }

@@ -4,18 +4,19 @@ services:
     build:
       context: .
       dockerfile: eCommerce.API/Dockerfile
-      environment:
-        - ASPNETCORE_ENVIRONMENT=Development
-        - MONGO_HOST=ecommerce-network
-        - MONGO_PORT=27017
-        - MONGO_DB=ecommerce-orders-database  
-      ports:
-        - "5000:8080"
-      dependencies:
-        - mongodb
-      networks:
-        - ecommerce-network
-        - orders-mongo-network
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      MONGO_HOST: mongodb
+      MONGO_PORT: "27017"
+      MONGO_DB: ecommerce-orders-database
+    ports:
+      - "5000:8080"
+    depends_on:
+      - mongodb
+    networks:
+      - ecommerce-network
+      - orders-mongo-network
 
   mongodb:
     image: mongo:latest
@@ -23,40 +24,41 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ../mongodb-data:/docker-entrypoint-initdb.d
-    networks: 
+      - ../mongodb-data:/docker-entrypoint-initdb.d:ro
+    networks:
       - orders-mongo-network
 
   users-microservice:
-    image: users-microservice:latest 
+    image: users-microservice:latest
     environment:
-      - ASPNETCORE_HTTP_PORTS=8080 
-      - POSTGRES_HOST=ecommerce-network
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=users-database 
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=kbiladze
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: users-database
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: kbiladze
     ports:
       - "5001:8080"
-    dependencies:
+    depends_on:
       - postgres
     networks:
       - ecommerce-network
       - users-postgres-network
 
   products-microservice:
-    image: products-microservice:latest 
-    volumes:
-      - ../mysql-init-scripts:/docker-entrypoint-initdb.d
+    image: products-microservice:latest
     environment:
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_ENVIRONMENT=Development
-      - MYSQL_HOST=ecommerce-network
-      - MYSQL_PORT=3306
-      - MYSQL_DB=products-database 
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_ENVIRONMENT: Development
+      MYSQL_HOST: mysql
+      MYSQL_PORT: "3306"
+      MYSQL_DB: products-database
+      MYSQL_USER: products_user
+      MYSQL_PASSWORD: kbiladze
     ports:
       - "5002:8080"
-    dependencies:
+    depends_on:
       - mysql
     networks:
       - ecommerce-network
@@ -66,9 +68,14 @@ services:
     image: mysql:latest
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: kbiladze 
+      MYSQL_ROOT_PASSWORD: kbiladze
+      MYSQL_DATABASE: products-database
+      MYSQL_USER: products_user
+      MYSQL_PASSWORD: kbiladze
     ports:
-      - "3306:3306"
+      - "3307:3306"
+    volumes:
+      - ../mysql-init-scripts:/docker-entrypoint-initdb.d:ro
     networks:
       - products-mysql-network
 
@@ -76,11 +83,11 @@ services:
     image: postgres:latest
     container_name: postgres
     volumes:
-      - ../postgres-init-scripts:/docker-entrypoint-initdb.d
+      - ../postgres-init-scripts:/docker-entrypoint-initdb.d:ro
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: kbiladze
-      POSTGRES_DB: orders-database
+      POSTGRES_DB: users-database
     ports:
       - "5432:5432"
     networks:
