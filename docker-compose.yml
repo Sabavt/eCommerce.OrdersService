@@ -1,0 +1,13 @@
+services:
+  ecommerce.api:
+    image: $ecommerceapi
+    build:
+      context: .
+      dockerfile: eCommerce.API/Dockerfile
+      environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - MONGODB_HOST=mongodb
+        - MONGODB_PORT=27017
+        - MONGODB_DB=ecommerce-orders-database 
+      ports:
+        - "5000:8080"
