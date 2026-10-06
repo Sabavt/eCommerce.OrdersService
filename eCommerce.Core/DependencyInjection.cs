@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddAutoMapper(p => {
             p.AddProfile(new OrderMappingProfile());
             p.AddProfile(new OrderItemMappingProfile());
+            p.AddProfile(new ProductDTOToOrderItemResponseMappingProfile());
         });
         services.AddScoped<IOrdersService, OrdersService>();
         return services;
