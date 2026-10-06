@@ -80,7 +80,24 @@ public class OrdersService : IOrdersService
     public async Task<List<OrderResponse?>> GetOrdersAsync(CancellationToken cancellationToken = default)
     {
         var orders = await _ordersRepository.GetAllOrdersAsync();
-        return orders.Select(_mapper.Map<OrderResponse?>).ToList();
+        var orderResponses = orders.Select(_mapper.Map<OrderResponse?>).ToList();
+        foreach(var orderResponse in orderResponses)
+        {
+            if (orderResponse != null)
+            {
+                foreach (var item in orderResponse.Items)
+                {
+                    var productFromProductService = await _productsMicroserviceHttpClient.GetProductByIdAsync(item.ProductID);
+                    if (productFromProductService != null)
+                    {
+                        item.ProductName = productFromProductService.Name;
+                        item.Quantity = productFromProductService.Quantity;
+                        item.Category = productFromProductService.Category;
+                    }
+                }
+            }
+        }
+        return orderResponses;
     } 
 
     public async Task<List<OrderResponse?>> GetOrdersByConditionAsync(FilterDefinition<Order> filter, CancellationToken cancellationToken = default)
