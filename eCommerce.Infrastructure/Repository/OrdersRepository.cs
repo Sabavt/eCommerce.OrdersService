@@ -47,12 +47,5 @@ public class OrdersRepository : IOrdersRepository
     {
         await _ordersCollection.ReplaceOneAsync(o => o.OrderID == order.OrderID, order);
         return order;
-    }
-
-    public async Task<bool> ProductIDExists(int productID)
-    {
-        var filter = Builders<Order>.Filter.ElemMatch(o => o.Items, i => i.ProductID == productID);
-        var order = await _ordersCollection.FindAsync(filter).Result.FirstOrDefaultAsync();
-        return order != null;
     } 
 } 

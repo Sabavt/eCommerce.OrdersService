@@ -54,6 +54,10 @@ public class OrdersService : IOrdersService
         foreach(var item in orderRequest.Items)
         {
             await _orderItemAddRequestValidator.ValidateAndThrowAsync(item);
+            if (!await _productsMicroserviceHttpClient.IsProductExistsAsync(item.ProductID))
+            {
+                throw new ArgumentException($"Product with ID {item.ProductID} does not exist.");
+            }
         }
 
         var order_to_add = _mapper.Map<Order>(orderRequest);
