@@ -46,20 +46,21 @@ public class OrdersService : IOrdersService
 
         await ValidateOrderItems(orderRequest);
 
-        await _orderAddRequestValidator.ValidateAndThrowAsync(orderRequest);
-
-        foreach(var item in orderRequest.Items)
-        {
-            await _orderItemAddRequestValidator.ValidateAndThrowAsync(item);
-            if (!await _productsMicroserviceHttpClient.IsProductExistsAsync(item.ProductID))
-            {
-                throw new ArgumentException($"Product with ID {item.ProductID} does not exist.");
-            }
-        }
+        await _orderAddRequestValidator.ValidateAndThrowAsync(orderRequest); 
 
         var order_to_add = _mapper.Map<Order>(orderRequest);
         var order_from_db = await _ordersRepository.CreateOrderAsync(order_to_add);
         var order_added = _mapper.Map<OrderResponse>(order_from_db);
+
+        await _usersMicroserviceHttpClient.GetUserByIdAsync(order_added.UserID).ContinueWith(userTask =>
+        {
+            if (userTask.Result != null)
+            {
+                order_added.PersonName = userTask.Result.Name;
+                order_added.Email = userTask.Result.Email;
+            }
+        });
+
         return order_added;
     }
 
@@ -156,9 +157,11 @@ public class OrdersService : IOrdersService
     }
 
     private async Task ValidateOrderItems(OrderUpdateRequest orderRequest)
-    {
+    { 
         foreach(var item in orderRequest.Items)
-        {
+        { 
+            await _orderItemAddRequestValidator.ValidateAndThrowAsync(item);
+
             if (!await _productsMicroserviceHttpClient.IsProductExistsAsync(item.ProductID))
             {
                 throw new ArgumentException($"Product with ID {item.ProductID} does not exist.");
