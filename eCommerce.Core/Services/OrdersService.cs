@@ -2,6 +2,7 @@
 using eCommerce.Core.Domain.Entities;
 using eCommerce.Core.Domain.RepositoryContracts;
 using eCommerce.Core.DTO;
+using eCommerce.Core.HttpClients;
 using eCommerce.Core.ServiceContracts;
 using FluentValidation;
 using MongoDB.Driver;
@@ -16,13 +17,15 @@ public class OrdersService : IOrdersService
     private readonly IValidator<OrderItemUpdateRequest> _orderItemUpdateRequestValidator;
     private readonly IMapper _mapper;
     private readonly IOrdersRepository _ordersRepository;
+    private readonly UsersMicroserviceHttpClient _usersMicroserviceHttpClient;
 
-    public OrdersService(IMapper mapper, IOrdersRepository ordersRepository, IValidator<OrderAddRequest> orderAddRequestValidator, IValidator<OrderUpdateRequest> orderUpdateRequestValidator, IValidator<OrderItemAddRequest> orderItemAddRequestValidator, IValidator<OrderItemUpdateRequest> orderItemUpdateRequestValidator)
+    public OrdersService(IMapper mapper, IOrdersRepository ordersRepository, IValidator<OrderAddRequest> orderAddRequestValidator, IValidator<OrderUpdateRequest> orderUpdateRequestValidator, IValidator<OrderItemAddRequest> orderItemAddRequestValidator, IValidator<OrderItemUpdateRequest> orderItemUpdateRequestValidator, UsersMicroserviceHttpClient usersMicroserviceHttpClient)
     {
         _orderAddRequestValidator = orderAddRequestValidator;
         _orderItemAddRequestValidator = orderItemAddRequestValidator;
         _orderUpdateRequestValidator = orderUpdateRequestValidator;
         _orderItemUpdateRequestValidator = orderItemUpdateRequestValidator;
+        _usersMicroserviceHttpClient = usersMicroserviceHttpClient;
         _mapper = mapper;
         _ordersRepository = ordersRepository;
     }
@@ -32,6 +35,11 @@ public class OrdersService : IOrdersService
         if(orderRequest == null)
         {
             throw new ArgumentNullException(nameof(orderRequest));
+        }
+
+        if (!await _usersMicroserviceHttpClient.IsUserExistsAsync(orderRequest.UserID))
+        {
+            throw new ArgumentException($"User with ID {orderRequest.UserID} does not exist.");
         }
 
         await _orderAddRequestValidator.ValidateAndThrowAsync(orderRequest);

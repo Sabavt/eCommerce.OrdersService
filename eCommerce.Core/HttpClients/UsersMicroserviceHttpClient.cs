@@ -18,4 +18,10 @@ public class UsersMicroserviceHttpClient
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<UserDTO>();
     }
+
+    public async Task<bool> IsUserExistsAsync(Guid userId)
+    {
+        var user = await GetUserByIdAsync(userId);
+        return user != null;
+    }
 } 
