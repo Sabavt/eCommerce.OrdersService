@@ -89,6 +89,11 @@ public class OrdersService : IOrdersService
             throw new ArgumentNullException(nameof(orderRequest));
         }
 
+        if(!await _usersMicroserviceHttpClient.IsUserExistsAsync(orderRequest.UserID))
+        {
+            throw new ArgumentException($"User with ID {orderRequest.UserID} does not exist.");
+        }
+
         await _orderUpdateRequestValidator.ValidateAndThrowAsync(orderRequest);
 
         foreach(var item in orderRequest.Items)
