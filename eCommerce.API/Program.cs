@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost5050/api");
+    client.BaseAddress = new Uri($"http://localhost:{builder.Configuration.GetValue<int>("UsersMicroservice:Port")}/api");
 });
 var app = builder.Build(); 
 app.UseSwagger();
