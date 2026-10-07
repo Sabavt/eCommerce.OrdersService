@@ -1,7 +1,8 @@
 using eCommerce.API.Middlewares;
 using eCommerce.Core;
 using eCommerce.Core.HttpClients;
-using eCommerce.Infrastructure; 
+using eCommerce.Infrastructure;
+using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddServices();
@@ -21,7 +22,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 {
     client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("USERS_MICROSERVICE_PORT")}/api/authentication/");
-});
+}).AddPolicyHandler(Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode).WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))));
 builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
 {
     client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_PORT")}/api/products/");
