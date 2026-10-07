@@ -21,6 +21,7 @@ builder.Services.AddCors(options =>
     });
 });
 builder.Services.AddTransient<IUsersMicroservicePolicies, UsersMicroservicePolicies>();
+builder.Services.AddTransient<IProductsMicroservicePolicies, ProductsMicroservicePolicies>();
 builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 {
     client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("USERS_MICROSERVICE_PORT")}/api/authentication/");
@@ -29,7 +30,7 @@ builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
 {
     client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_PORT")}/api/products/");
-});
+}).AddPolicyHandler(builder.Services.BuildServiceProvider().GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceFallbackPolicy());
 var app = builder.Build(); 
 app.UseSwagger();
 app.UseSwaggerUI();
