@@ -2,8 +2,7 @@ using eCommerce.API.Middlewares;
 using eCommerce.Core;
 using eCommerce.Core.HttpClients;
 using eCommerce.Core.Policies;
-using eCommerce.Infrastructure;
-using Polly;
+using eCommerce.Infrastructure; 
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddServices();
