@@ -45,7 +45,7 @@ public class PollyPolicies : IPollyPolicies
         {
             _logger.LogWarning("Fallback has been triggered, request has been failed, returning dummy value!");
 
-            return new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+            return new HttpResponseMessage(System.Net.HttpStatusCode.ServiceUnavailable)
             {
                 Content = new StringContent("")
             };

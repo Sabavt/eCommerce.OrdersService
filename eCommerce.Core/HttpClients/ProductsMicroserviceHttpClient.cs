@@ -28,7 +28,7 @@ public class ProductsMicroserviceHttpClient(ILogger<ProductsMicroserviceHttpClie
 
             var product_from_response = await response.Content.ReadFromJsonAsync<ProductDTO>();
 
-            if (product_from_response != null)
+            if (product_from_response != null && response.StatusCode != System.Net.HttpStatusCode.ServiceUnavailable)
             {
                 string product_json = JsonSerializer.Serialize(product_from_response);
                 string cacheKeyToWrite = $"product:{productId}";
