@@ -1,6 +1,7 @@
 ﻿using DnsClient.Internal;
 using eCommerce.Core.DTO;
 using Polly;
+using Polly.Bulkhead;
 using System.Text.Json;
 
 namespace eCommerce.Core.Policies;
@@ -8,6 +9,15 @@ namespace eCommerce.Core.Policies;
 public class ProductsMicroservicePolicies(ILogger logger) : IProductsMicroservicePolicies
 {
     private readonly ILogger _logger = logger;
+
+    public IAsyncPolicy<HttpResponseMessage> GetProductsMicroserviceBulkheadIsolationPolicy()
+    {
+        return Policy.BulkheadAsync<HttpResponseMessage>(4, 30, (context) => {
+            _logger.LogWarning("Bulkhead Isolation triggered. Can't  send any more reuests, because queue is full");
+
+            throw new BulkheadRejectedException("Queue is full.");
+        });
+    }
 
     public IAsyncPolicy<HttpResponseMessage> GetProductsMicroserviceFallbackPolicy()
     {
