@@ -27,33 +27,17 @@ builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 })
 .AddPolicyHandler((services, request) =>
 {
-    return services.GetRequiredService<IUsersMicroservicePolicies>().GetUsersMicroserviceCircuitBrakerPolicy();
-})
-
-.AddPolicyHandler((services, response) =>
-{
-    return services.GetRequiredService<IUsersMicroservicePolicies>().GetUsersMicroserviceTimeOutPolicy();
+    return services.GetRequiredService<IUsersMicroservicePolicies>().GetCombinedPolicyAsync();
 });
 
 builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
 {
     client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_PORT")}/api/products/");
-})
-
-.AddPolicyHandler((services, request) => 
+}) 
+.AddPolicyHandler((services, request) =>
 {
-    return services.GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceFallbackPolicy();
-})
-
-.AddPolicyHandler((services, response) => 
-{ 
-    return services.GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceTimeoutPolicy(); 
-})
-
-.AddPolicyHandler((services, response) =>
- {
-     return services.GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceBulkheadIsolationPolicy();
- });
+    return services.GetRequiredService<IProductsMicroservicePolicies>().GetCombinedPolicyAsync();
+});
 
 var app = builder.Build(); 
 app.UseSwagger();
