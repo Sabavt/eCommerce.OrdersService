@@ -32,4 +32,9 @@ public class UsersMicroservicePolicies : IUsersMicroservicePolicies
             _logger.LogWarning("Retrying request after {TimeSpan} (attempt {RetryCount})", timespan, retryCount)
             );
     }
+
+    public IAsyncPolicy<HttpResponseMessage> GetUsersMicroserviceTimeOutPolicy()
+    {
+        return Policy.TimeoutAsync<HttpResponseMessage>(10);
+    }
 } 

@@ -29,4 +29,9 @@ public class ProductsMicroservicePolicies(ILogger logger) : IProductsMicroservic
             };
         });
     }
+
+    public IAsyncPolicy<HttpResponseMessage> GetProductsMicroserviceTimeoutPolicy()
+    {
+        return Policy.TimeoutAsync<HttpResponseMessage>(10);
+    }
 }

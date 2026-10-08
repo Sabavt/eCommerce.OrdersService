@@ -24,12 +24,21 @@ builder.Services.AddTransient<IProductsMicroservicePolicies, ProductsMicroservic
 builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 {
     client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("USERS_MICROSERVICE_PORT")}/api/authentication/");
-}).AddPolicyHandler(builder.Services.BuildServiceProvider().GetRequiredService<IUsersMicroservicePolicies>().GetUsersMicroserviceRetryPolicy());
+})
+.AddPolicyHandler(builder.Services.BuildServiceProvider().GetRequiredService<IUsersMicroservicePolicies>()
+.GetUsersMicroserviceRetryPolicy())
+
+.AddPolicyHandler(builder.Services.BuildServiceProvider().GetRequiredService<IUsersMicroservicePolicies>().GetUsersMicroserviceTimeOutPolicy());
 
 builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
 {
     client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_PORT")}/api/products/");
-}).AddPolicyHandler(builder.Services.BuildServiceProvider().GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceFallbackPolicy());
+})
+
+.AddPolicyHandler(builder.Services.BuildServiceProvider().GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceFallbackPolicy())
+
+.AddPolicyHandler(builder.Services.BuildServiceProvider().GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceTimeoutPolicy());
+
 var app = builder.Build(); 
 app.UseSwagger();
 app.UseSwaggerUI();
