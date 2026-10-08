@@ -20,12 +20,22 @@ public class ProductsMicroserviceHttpClient(ILogger<ProductsMicroserviceHttpClie
             string? cachedProduct = await _distributedCache.GetStringAsync($"product:{productId}");
             if (cachedProduct != null)
             {
-                var product = JsonSerializer.Deserialize<ProductDTO>(cachedProduct);
+                var product = JsonSerializer.Deserialize<ProductDTO>(cachedProduct); 
                 return product;
             }
             var response = await _httpClient.GetAsync(requestUri: $"search/{productId}");
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<ProductDTO>();
+
+            var product_from_response = await response.Content.ReadFromJsonAsync<ProductDTO>();
+
+            if (product_from_response != null)
+            {
+                string product_json = JsonSerializer.Serialize(product_from_response);
+                string cacheKeyToWrite = $"product:{productId}";
+                DistributedCacheEntryOptions options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(250)).SetSlidingExpiration(TimeSpan.FromSeconds(100));
+                await _distributedCache.SetStringAsync(cacheKeyToWrite, product_json, options);
+            }
+            return product_from_response;
         }
         catch (BulkheadRejectedException ex)
         {

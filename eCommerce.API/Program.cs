@@ -36,7 +36,7 @@ builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
     client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_PORT")}/api/products/");
 }) 
 .AddPolicyHandler((services, request) =>
-{
+{ 
     return services.GetRequiredService<IPollyPolicies>().GetCombinedPolicyAsync();
 });
 
