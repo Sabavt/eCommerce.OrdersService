@@ -19,15 +19,16 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();
     });
 });
-builder.Services.AddTransient<IUsersMicroservicePolicies, UsersMicroservicePolicies>();
-builder.Services.AddTransient<IProductsMicroservicePolicies, ProductsMicroservicePolicies>();
+
+builder.Services.AddTransient<IPollyPolicies, PollyPolicies>(); 
+
 builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 {
     client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("USERS_MICROSERVICE_PORT")}/api/authentication/");
 })
 .AddPolicyHandler((services, request) =>
 {
-    return services.GetRequiredService<IUsersMicroservicePolicies>().GetCombinedPolicyAsync();
+    return services.GetRequiredService<IPollyPolicies>().GetCombinedPolicyAsync();
 });
 
 builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
@@ -36,7 +37,7 @@ builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
 }) 
 .AddPolicyHandler((services, request) =>
 {
-    return services.GetRequiredService<IProductsMicroservicePolicies>().GetCombinedPolicyAsync();
+    return services.GetRequiredService<IPollyPolicies>().GetCombinedPolicyAsync();
 });
 
 var app = builder.Build(); 

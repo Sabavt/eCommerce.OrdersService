@@ -6,9 +6,9 @@ namespace eCommerce.Core.Policies;
 
 public class PollyPolicies : IPollyPolicies
 {
-    private readonly ILogger<UsersMicroservicePolicies> _logger;
+    private readonly ILogger<PollyPolicies> _logger;
 
-    public PollyPolicies(ILogger<UsersMicroservicePolicies> logger)
+    public PollyPolicies(ILogger<PollyPolicies> logger)
     {
         _logger = logger;
     }
@@ -37,16 +37,7 @@ public class PollyPolicies : IPollyPolicies
     public IAsyncPolicy<HttpResponseMessage> GetTimeOutPolicy(int seconds)
     {
         return Policy.TimeoutAsync<HttpResponseMessage>(seconds);
-    }
-
-    public IAsyncPolicy<HttpResponseMessage> GetCombinedPolicyAsync()
-    {
-        var retryPolicy = GetRetryPolicy(3);
-        var timeOutPolicy = GetTimeOutPolicy(10);
-        var circuitBrakerPolicy = GetCircuitBrakerPolicy(2, TimeSpan.FromSeconds(5));
-
-        return Policy.WrapAsync(retryPolicy, timeOutPolicy, circuitBrakerPolicy);
-    }
+    } 
 
     public IAsyncPolicy<HttpResponseMessage> GetFallbackPolicy()
     {
@@ -64,9 +55,20 @@ public class PollyPolicies : IPollyPolicies
     public IAsyncPolicy<HttpResponseMessage> GetBulkheadIsolationPolicy(int maxParallelization, int maxQueuingActions)
     {
         return Policy.BulkheadAsync<HttpResponseMessage>(maxParallelization, maxQueuingActions, (context) => {
-            _logger.LogWarning("Bulkhead Isolation triggered. Can't  send any more reuests, because queue is full");
+            _logger.LogWarning("Bulkhead Isolation triggered. Can't  send any more requests, because queue is full");
 
             throw new BulkheadRejectedException("Queue is full.");
         });
+    }
+    
+    public IAsyncPolicy<HttpResponseMessage> GetCombinedPolicyAsync()
+    {
+        var retryPolicy = GetRetryPolicy(3);
+        var timeOutPolicy = GetTimeOutPolicy(10);
+        var bulkHeadIsolationPolicy = GetBulkheadIsolationPolicy(2, 20);
+        var circuitBrakerPolicy = GetCircuitBrakerPolicy(2, TimeSpan.FromSeconds(5));
+        var fallBackPolicy = GetFallbackPolicy();
+
+        return Policy.WrapAsync(retryPolicy, timeOutPolicy, circuitBrakerPolicy);
     }
 } 
