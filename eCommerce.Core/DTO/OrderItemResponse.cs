@@ -3,11 +3,12 @@
 public record OrderItemResponse(
     Guid Id,
     int ProductID,
-    decimal Price,
-    int Quantity,
-    string ProductName,
-    string Category
+    decimal Price
 )
 {
-    public OrderItemResponse() : this(Guid.Empty, 0, 0m, 0, default!, default!) {  }
+    public int Quantity {  get; set; }
+    public string? ProductName { get; set; } 
+    public string? Category { get; set; }
+
+    public OrderItemResponse() : this(Guid.Empty, 0, 0m) {  }
 }

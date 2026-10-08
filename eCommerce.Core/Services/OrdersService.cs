@@ -44,7 +44,15 @@ public class OrdersService : IOrdersService
             throw new ArgumentException($"User with ID {orderRequest.UserID} does not exist.");
         }
 
-        await ValidateOrderItems(orderRequest);
+        foreach (var item in orderRequest.Items)
+        {
+            await _orderItemAddRequestValidator.ValidateAndThrowAsync(item);
+
+            if (!await _productsMicroserviceHttpClient.IsProductExistsAsync(item.ProductID))
+            {
+                throw new ArgumentException($"Product with ID {item.ProductID} does not exist.");
+            }
+        }
 
         await _orderAddRequestValidator.ValidateAndThrowAsync(orderRequest);
 
@@ -52,11 +60,11 @@ public class OrdersService : IOrdersService
         var order_from_db = await _ordersRepository.CreateOrderAsync(order_to_add);
         var order_added = _mapper.Map<OrderResponse>(order_from_db);
 
-        await FillingUserDetailsForOrders(order_added);
+        await FillingUserDetailsForOrders(new List<OrderResponse?>() { order_added });
 
         return order_added;
     }
-     
+
     public async Task<bool> DeleteOrderAsync(Guid orderID, CancellationToken cancellationToken = default)
     {
         return await _ordersRepository.DeleteOrderAsync(orderID);
@@ -66,21 +74,23 @@ public class OrdersService : IOrdersService
     {
         var order = await _ordersRepository.GetOrderByConditionAsync(filter);
         var orderResponse = order != null ? _mapper.Map<OrderResponse>(order) : null;
+
         if (orderResponse != null)
         {
             foreach (var item in orderResponse.Items)
             {
                 var productFromProductService = await _productsMicroserviceHttpClient.GetProductByIdAsync(item.ProductID);
                 var userFromUserService = await _usersMicroserviceHttpClient.GetUserByIdAsync(orderResponse.UserID);
+
                 if (productFromProductService != null)
                 {
-                    item.ProductName = productFromProductService.Name;
+                    item.ProductName = productFromProductService.ProductName;
                     item.Quantity = productFromProductService.Quantity;
                     item.Category = productFromProductService.Category;
                 }
                 if (userFromUserService != null)
                 {
-                    orderResponse.PersonName = userFromUserService.Name;
+                    orderResponse.PersonName = userFromUserService.PersonName;
                     orderResponse.Email = userFromUserService.Email;
                 }
             }
@@ -95,12 +105,12 @@ public class OrdersService : IOrdersService
         await FillingProductsDataForOrders(orderResponses);
         await FillingUserDetailsForOrders(orderResponses);
         return orderResponses;
-    } 
+    }
 
     public async Task<List<OrderResponse?>> GetOrdersByConditionAsync(FilterDefinition<Order> filter, CancellationToken cancellationToken = default)
     {
         var orders = await _ordersRepository.GetOrdersByConditionAsync(filter);
-        if(orders == null)
+        if (orders == null)
         {
             return new List<OrderResponse?>();
         }
@@ -122,7 +132,10 @@ public class OrdersService : IOrdersService
             throw new ArgumentException($"User with ID {orderRequest.UserID} does not exist.");
         }
 
-        await ValidateOrderItems(orderRequest);
+        foreach (var item in orderRequest.Items)
+        {
+            await _orderItemUpdateRequestValidator.ValidateAndThrowAsync(item);
+        }
 
         await _orderUpdateRequestValidator.ValidateAndThrowAsync(orderRequest);
 
@@ -148,7 +161,7 @@ public class OrdersService : IOrdersService
                     var productFromProductService = await _productsMicroserviceHttpClient.GetProductByIdAsync(item.ProductID);
                     if (productFromProductService != null)
                     {
-                        item.ProductName = productFromProductService.Name;
+                        item.ProductName = productFromProductService.ProductName;
                         item.Quantity = productFromProductService.Quantity;
                         item.Category = productFromProductService.Category;
                     }
@@ -157,28 +170,21 @@ public class OrdersService : IOrdersService
         }
     }
 
-    private async Task FillingUserDetailsForOrders(OrderResponse order_added)
+    private async Task FillingUserDetailsForOrders(List<OrderResponse?> orders_added)
     {
-        await _usersMicroserviceHttpClient.GetUserByIdAsync(order_added.UserID).ContinueWith(userTask =>
+        foreach (var order_added in orders_added)
         {
-            if (userTask.Result != null)
+            if (order_added != null)
             {
-                order_added.PersonName = userTask.Result.Name;
-                order_added.Email = userTask.Result.Email;
+                await _usersMicroserviceHttpClient.GetUserByIdAsync(order_added.UserID).ContinueWith(userTask =>
+                       {
+                           if (userTask != null)
+                           {
+                               order_added.PersonName = userTask.Result?.PersonName;
+                               order_added.Email = userTask.Result?.Email;
+                           }
+                       });
             }
-        });
-    }
-
-    private async Task ValidateOrderItems(OrderUpdateRequest orderRequest)
-    { 
-        foreach(var item in orderRequest.Items)
-        { 
-            await _orderItemAddRequestValidator.ValidateAndThrowAsync(item);
-
-            if (!await _productsMicroserviceHttpClient.IsProductExistsAsync(item.ProductID))
-            {
-                throw new ArgumentException($"Product with ID {item.ProductID} does not exist.");
-            }
-        }) 
-    }
-} 
+        }
+    } 
+}

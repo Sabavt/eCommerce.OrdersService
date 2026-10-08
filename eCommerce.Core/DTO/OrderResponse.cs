@@ -5,10 +5,11 @@ public record OrderResponse(
     Guid UserID,
     DateTime OrderDate,
     decimal TotalAmount,
-    List<OrderItemResponse> Items,
-    string? PersonName = null,
-    string? Email = null
+    List<OrderItemResponse> Items
 )
 {
-    public OrderResponse() : this(Guid.Empty, Guid.Empty, DateTime.UtcNow, 0m, new List<OrderItemResponse>(), null, null)  { }
+    public string? PersonName { get; set; }
+    public string? Email { get; set; }
+
+    public OrderResponse() : this(Guid.Empty, Guid.Empty, DateTime.UtcNow, 0m, new List<OrderItemResponse>())  { }
 } 
