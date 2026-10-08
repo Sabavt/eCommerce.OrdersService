@@ -18,7 +18,7 @@ public static class DependencyInjection
         });
         services.AddScoped<IOrdersService, OrdersService>();
         services.AddStackExchangeRedisCache(opt => opt.Configuration = 
-        $"{Environment.GetEnvironmentVariable("REDIS_HOST")}:{"REDIS_PORT"}");
+        $"{Environment.GetEnvironmentVariable("REDIS_HOST")}:{Environment.GetEnvironmentVariable("REDIS_PORT")}");
         return services;
     }
 } 

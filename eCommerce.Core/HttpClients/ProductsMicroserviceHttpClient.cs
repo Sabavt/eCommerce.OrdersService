@@ -1,20 +1,29 @@
 ﻿using eCommerce.Core.DTO;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Polly.Bulkhead;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace eCommerce.Core.HttpClients;
 
-public class ProductsMicroserviceHttpClient(ILogger<ProductsMicroserviceHttpClient> logger, HttpClient httpClient)
+public class ProductsMicroserviceHttpClient(ILogger<ProductsMicroserviceHttpClient> logger, HttpClient httpClient, IDistributedCache distributedCache)
 {
     private readonly ILogger<ProductsMicroserviceHttpClient> _logger = logger;
     private readonly HttpClient _httpClient = httpClient;
+    private readonly IDistributedCache _distributedCache = distributedCache;
 
     public async Task<ProductDTO?> GetProductByIdAsync(int productId)
     {
         try
-        {
-            var response = await _httpClient.GetAsync($"search/{productId}");
+        { 
+            string? cachedProduct = await _distributedCache.GetStringAsync($"product:{productId}");
+            if (cachedProduct != null)
+            {
+                var product = JsonSerializer.Deserialize<ProductDTO>(cachedProduct);
+                return product;
+            }
+            var response = await _httpClient.GetAsync(requestUri: $"search/{productId}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<ProductDTO>();
         }
