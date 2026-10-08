@@ -37,4 +37,13 @@ public class UsersMicroservicePolicies : IUsersMicroservicePolicies
     {
         return Policy.TimeoutAsync<HttpResponseMessage>(10);
     }
+
+    public IAsyncPolicy<HttpResponseMessage> GetCombinedPolicyAsync()
+    {
+        var retryPolicy = GetUsersMicroserviceRetryPolicy();
+        var timeOutPolicy = GetUsersMicroserviceTimeOutPolicy();
+        var circuitBrakerPolicy = GetUsersMicroserviceCircuitBrakerPolicy();
+
+        return Policy.WrapAsync(retryPolicy, timeOutPolicy, circuitBrakerPolicy);
+    }
 } 

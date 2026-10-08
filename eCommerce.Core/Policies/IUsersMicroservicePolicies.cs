@@ -4,7 +4,8 @@ namespace eCommerce.Core.Policies;
 
 public interface IUsersMicroservicePolicies
 {
-    public IAsyncPolicy<HttpResponseMessage> GetUsersMicroserviceRetryPolicy();
-    public IAsyncPolicy<HttpResponseMessage> GetUsersMicroserviceCircuitBrakerPolicy();
-    public IAsyncPolicy<HttpResponseMessage> GetUsersMicroserviceTimeOutPolicy();
-} 
+    IAsyncPolicy<HttpResponseMessage> GetUsersMicroserviceRetryPolicy();
+    IAsyncPolicy<HttpResponseMessage> GetUsersMicroserviceCircuitBrakerPolicy();
+    IAsyncPolicy<HttpResponseMessage> GetUsersMicroserviceTimeOutPolicy();
+    IAsyncPolicy<HttpResponseMessage> GetCombinedPolicyAsync(); 
+}

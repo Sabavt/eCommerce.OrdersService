@@ -44,4 +44,13 @@ public class ProductsMicroservicePolicies(ILogger logger) : IProductsMicroservic
     {
         return Policy.TimeoutAsync<HttpResponseMessage>(10);
     }
+
+    public IAsyncPolicy<HttpResponseMessage> GetCombinedPolicyAsync()
+    {
+        var timeOutPolicy = GetProductsMicroserviceTimeoutPolicy();
+        var fallBackPolicy = GetProductsMicroserviceFallbackPolicy();
+        var bulkHeadPolicy = GetProductsMicroserviceBulkheadIsolationPolicy();
+
+       return Policy.WrapAsync(timeOutPolicy,  fallBackPolicy, bulkHeadPolicy);
+    }
 }

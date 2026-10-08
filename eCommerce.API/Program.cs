@@ -48,7 +48,12 @@ builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
 .AddPolicyHandler((services, response) => 
 { 
     return services.GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceTimeoutPolicy(); 
-});
+})
+
+.AddPolicyHandler((services, response) =>
+ {
+     return services.GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceBulkheadIsolationPolicy();
+ });
 
 var app = builder.Build(); 
 app.UseSwagger();
