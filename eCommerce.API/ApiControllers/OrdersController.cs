@@ -60,7 +60,7 @@ namespace eCommerce.API.ApiControllers
         }
 
         [HttpGet("product/{productID}")]
-        public async Task<IActionResult> GetOrdersByProductIDAsync(Guid productID, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetOrdersByProductIDAsync(int productID, CancellationToken cancellationToken)
         {
             var filter = Builders<Order>.Filter.ElemMatch(o => o.Items, item => item.ProductID == productID);
             var ordersResponse = await _ordersService.GetOrdersByConditionAsync(filter, cancellationToken);

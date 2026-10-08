@@ -14,8 +14,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssemblyContaining<OrderAddRequestValidator>();
         services.AddAutoMapper(p => {
             p.AddProfile(new OrderMappingProfile());
-            p.AddProfile(new OrderItemMappingProfile());
-            p.AddProfile(new ProductDTOToOrderItemResponseMappingProfile());
+            p.AddProfile(new OrderItemMappingProfile()); 
         });
         services.AddScoped<IOrdersService, OrdersService>();
         return services;
