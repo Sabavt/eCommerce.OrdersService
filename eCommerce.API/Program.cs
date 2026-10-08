@@ -25,19 +25,30 @@ builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 {
     client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("USERS_MICROSERVICE_PORT")}/api/authentication/");
 })
-.AddPolicyHandler(builder.Services.BuildServiceProvider().GetRequiredService<IUsersMicroservicePolicies>()
-.GetUsersMicroserviceRetryPolicy())
+.AddPolicyHandler((services, request) =>
+{
+    return services.GetRequiredService<IUsersMicroservicePolicies>().GetUsersMicroserviceCircuitBrakerPolicy();
+})
 
-.AddPolicyHandler(builder.Services.BuildServiceProvider().GetRequiredService<IUsersMicroservicePolicies>().GetUsersMicroserviceTimeOutPolicy());
+.AddPolicyHandler((services, response) =>
+{
+    return services.GetRequiredService<IUsersMicroservicePolicies>().GetUsersMicroserviceTimeOutPolicy();
+});
 
 builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
 {
     client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_PORT")}/api/products/");
 })
 
-.AddPolicyHandler(builder.Services.BuildServiceProvider().GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceFallbackPolicy())
+.AddPolicyHandler((services, request) => 
+{
+    return services.GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceFallbackPolicy();
+})
 
-.AddPolicyHandler(builder.Services.BuildServiceProvider().GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceTimeoutPolicy());
+.AddPolicyHandler((services, response) => 
+{ 
+    return services.GetRequiredService<IProductsMicroservicePolicies>().GetProductsMicroserviceTimeoutPolicy(); 
+});
 
 var app = builder.Build(); 
 app.UseSwagger();
