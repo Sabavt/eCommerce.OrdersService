@@ -1,1 +1,19 @@
-﻿
+﻿{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/gateway/Orders",
+      "DownstreamPathTemplate": "/api/Orders",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerce.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamHttpMethod": [ "Get", "Post", "Options" ],
+      "DownstreamScheme" : "http"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl" : "http://localhost:5014"
+  }
+}
