@@ -32,7 +32,7 @@ public class UsersMicroserviceHttpClient
 
         if (response != null && response.StatusCode != System.Net.HttpStatusCode.ServiceUnavailable)
         {
-            var user_json = JsonSerializer.Serialize(user_from_response);
+            var user_json = json;
             await _distributedCache.SetStringAsync($"user:{userId}", user_json, new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(2)).SetSlidingExpiration(TimeSpan.FromMinutes(1)));
         }
         return user_from_response;

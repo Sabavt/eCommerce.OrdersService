@@ -3,14 +3,26 @@
     {
       "UpstreamPathTemplate": "/gateway/Orders",
       "UpstreamHttpMethod": [ "Get", "Post", "Options" ],
-      "DownstreamScheme" : "http",
+      "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/Orders",
       "DownstreamHostAndPorts": [
         {
           "Host": "ecommerce.api",
           "Port": 8080
         }
-      ] 
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/Orders/search/orderid/{orderID}",
+      "UpstreamHttpMethod": [ "Get", "Options" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Orders/{orderID}",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerce.api",
+          "Port": 8080
+        }
+      ]
     }
   ],
   "GlobalConfiguration": {
