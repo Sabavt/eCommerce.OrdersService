@@ -25,7 +25,7 @@ namespace eCommerce.API.Middlewares
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An unhandled exception has occurred while executing the request.");
-                await httpContext.Response.WriteAsJsonAsync(ex);
+                await httpContext.Response.WriteAsync(ex.Message);
                 httpContext.Response.StatusCode = 500;
             }
         }

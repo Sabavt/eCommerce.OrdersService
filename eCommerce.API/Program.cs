@@ -24,7 +24,10 @@ builder.Services.AddTransient<IPollyPolicies, PollyPolicies>();
 
 builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 {
-    client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("USERS_MICROSERVICE_PORT")}/api/authentication/");
+    string host = Environment.GetEnvironmentVariable("USERS_MICROSERVICE_HOST")!;
+    string port = Environment.GetEnvironmentVariable("USERS_MICROSERVICE_PORT")!;
+
+    client.BaseAddress = new Uri($"http://{host}:{port}/api/authentication/");
 })
 .AddPolicyHandler((services, request) =>
 {
@@ -33,7 +36,10 @@ builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 
 builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
 {
-    client.BaseAddress = new Uri($"http://localhost:{Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_PORT")}/api/products/");
+    string host = Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_HOST")!;
+    string port = Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_PORT")!;
+
+    client.BaseAddress = new Uri($"http://{host}:{port}/api/products/");
 }) 
 .AddPolicyHandler((services, request) =>
 { 

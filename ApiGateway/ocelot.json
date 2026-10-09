@@ -2,15 +2,15 @@
   "Routes": [
     {
       "UpstreamPathTemplate": "/gateway/Orders",
+      "UpstreamHttpMethod": [ "Get", "Post", "Options" ],
+      "DownstreamScheme" : "http",
       "DownstreamPathTemplate": "/api/Orders",
       "DownstreamHostAndPorts": [
         {
           "Host": "ecommerce.api",
           "Port": 8080
         }
-      ],
-      "UpstreamHttpMethod": [ "Get", "Post", "Options" ],
-      "DownstreamScheme" : "http"
+      ] 
     }
   ],
   "GlobalConfiguration": {

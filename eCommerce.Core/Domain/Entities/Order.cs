@@ -5,6 +5,7 @@ namespace eCommerce.Core.Domain.Entities;
 public class Order
 {
     [BsonId]
+    [BsonRepresentation(MongoDB.Bson.BsonType.String)]
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
     [BsonRepresentation(MongoDB.Bson.BsonType.String)]

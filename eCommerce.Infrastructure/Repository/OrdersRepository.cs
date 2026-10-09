@@ -9,7 +9,7 @@ public class OrdersRepository : IOrdersRepository
     private readonly IMongoCollection<Order> _ordersCollection;
     public OrdersRepository(IMongoDatabase mongoDatabase)
     {
-        _ordersCollection = mongoDatabase.GetCollection<Order>("Orders");
+        _ordersCollection = mongoDatabase.GetCollection<Order>("orders");
     }
 
     public async Task<Order> CreateOrderAsync(Order order)

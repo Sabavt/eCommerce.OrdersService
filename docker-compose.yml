@@ -9,9 +9,11 @@ services:
       ASPNETCORE_HTTP_PORTS: "8080"
       MONGO_HOST: mongodb
       MONGO_PORT: "27017"
-      MONGO_DB: ecommerce-orders-database
-      USERS_MICROSERVICE_PORT: "5001"
-      PRODUCTS_MICROSERVICE_PORT: "5002"
+      MONGO_DB: OrdersDatabase  
+      USERS_MICROSERVICE_HOST: users-microservice
+      USERS_MICROSERVICE_PORT: "8080"
+      PRODUCTS_MICROSERVICE_HOST: products-microservice
+      PRODUCTS_MICROSERVICE_PORT: "8080"
       REDIS_HOST: redis
       REDIS_PORT: "6379"
     ports:
@@ -99,9 +101,23 @@ services:
 
   redis:
     image: redis:latest
-    ports: 6379:6379
-    volumes: ../redis-cache:/data
-    networks: ecommerce-network
+    ports:
+      - "6379:6379"
+    volumes:
+      - ../redis-cache:/data
+    networks:
+      - ecommerce-network
+
+  apigateway:
+    image: apigateway:latest
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    ports:
+      - "5014:8080"
+    networks:
+      - ecommerce-network
+    
 
 networks:
   ecommerce-network:
