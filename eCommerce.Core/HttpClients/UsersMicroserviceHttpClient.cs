@@ -25,7 +25,7 @@ public class UsersMicroserviceHttpClient
             return user_from_cache;
         }
 
-        var response = await _httpClient.GetAsync($"{userId}");
+        var response = await _httpClient.GetAsync($"getuserbyuserid/{userId}");
         response.EnsureSuccessStatusCode();
         var user_from_response = await response.Content.ReadFromJsonAsync<UserDTO>();
 

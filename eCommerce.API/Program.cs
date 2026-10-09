@@ -2,12 +2,12 @@ using eCommerce.API.Middlewares;
 using eCommerce.Core;
 using eCommerce.Core.HttpClients;
 using eCommerce.Core.Policies;
-using eCommerce.Infrastructure; 
+using eCommerce.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddServices();
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddControllers(); 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddTransient<IPollyPolicies, PollyPolicies>(); 
+builder.Services.AddTransient<IPollyPolicies, PollyPolicies>();
 
 builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
 {
@@ -40,13 +40,13 @@ builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
     string port = Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_PORT")!;
 
     client.BaseAddress = new Uri($"http://{host}:{port}/api/products/");
-}) 
+})
 .AddPolicyHandler((services, request) =>
-{ 
+{
     return services.GetRequiredService<IPollyPolicies>().GetCombinedPolicyAsync();
 });
 
-var app = builder.Build(); 
+var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseExceptionHandlingMiddleware();
@@ -54,8 +54,11 @@ app.UseStaticFiles();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHsts();
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+    app.UseHttpsRedirection(); 
+}
 app.MapControllers();
 
 app.Run();

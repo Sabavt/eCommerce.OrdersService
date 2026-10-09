@@ -176,15 +176,13 @@ public class OrdersService : IOrdersService
         {
             if (order_added != null)
             {
-                await _usersMicroserviceHttpClient.GetUserByIdAsync(order_added.UserID).ContinueWith(userTask =>
-                       {
-                           if (userTask != null)
-                           {
-                               order_added.PersonName = userTask.Result?.PersonName;
-                               order_added.Email = userTask.Result?.Email;
-                           }
-                       });
+                var user = await _usersMicroserviceHttpClient.GetUserByIdAsync(order_added.UserID);
+                if (user is not null)
+                {
+                    order_added.PersonName = user.PersonName;
+                    order_added.Email = user.Email;
+                } 
             }
         }
-    } 
+    }
 }

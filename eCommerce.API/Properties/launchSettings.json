@@ -11,7 +11,7 @@
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5142",
       "launchUrl": "swagger",
-      "MONGO_DB": "ecommerce" 
+      "MONGO_DB": "ecommerce"
     },
     "https": {
       "commandName": "Project",
@@ -29,14 +29,15 @@
     "Container (Dockerfile)": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "environmentVariables": {
-        "ASPNETCORE_HTTPS_PORTS": "8081",
+        "ASPNETCORE_URLS": "http://+:8080",
         "ASPNETCORE_HTTP_PORTS": "8080",
-        "MONGO_DB": "ecommerce"  
+        "ASPNETCORE_HTTPS_PORTS": "",
+        "MONGO_DB": "OrdersDatabase"
       },
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": false
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json"

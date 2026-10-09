@@ -26,7 +26,10 @@ public class ProductsMicroserviceHttpClient(ILogger<ProductsMicroserviceHttpClie
             var response = await _httpClient.GetAsync(requestUri: $"search/{productId}");
             response.EnsureSuccessStatusCode();
 
-            var product_from_response = await response.Content.ReadFromJsonAsync<ProductDTO>();
+            string json = await response.Content.ReadAsStringAsync();
+
+            var product_from_response =
+                await response.Content.ReadFromJsonAsync<ProductDTO>();
 
             if (product_from_response != null && response.StatusCode != System.Net.HttpStatusCode.ServiceUnavailable)
             {
