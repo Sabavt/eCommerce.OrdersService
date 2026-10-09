@@ -27,7 +27,8 @@ public class UsersMicroserviceHttpClient
 
         var response = await _httpClient.GetAsync($"getuserbyuserid/{userId}");
         response.EnsureSuccessStatusCode();
-        var user_from_response = await response.Content.ReadFromJsonAsync<UserDTO>();
+        string json = await response.Content.ReadAsStringAsync();
+        var user_from_response = JsonSerializer.Deserialize<UserDTO>(json);
 
         if (response != null && response.StatusCode != System.Net.HttpStatusCode.ServiceUnavailable)
         {

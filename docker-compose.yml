@@ -35,12 +35,8 @@ services:
       - orders-mongo-network
 
   users-microservice:
-    image: users-microservice:latest
-    build:
-      context: ../eCommerce/eCommerceSolution
-      dockerfile: eCommerce.API/Dockerfile
-    environment:
-      ASPNETCORE_URLS: "http://+:8080"
+    image: users-microservice:latest 
+    environment: 
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: "8080"
       POSTGRES_HOST: postgres
@@ -57,10 +53,7 @@ services:
       - users-postgres-network
 
   products-microservice:
-    image: products-microservice:latest
-    build:
-      context: ../eCommerce.Products
-      dockerfile: eCommerce.API/Dockerfile
+    image: products-microservice:latest 
     environment:
       ASPNETCORE_HTTP_PORTS: "8080"
       ASPNETCORE_ENVIRONMENT: Development
