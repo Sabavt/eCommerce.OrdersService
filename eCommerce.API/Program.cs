@@ -27,7 +27,7 @@ builder.Services.AddHttpClient<UsersMicroserviceHttpClient>(client =>
     string host = Environment.GetEnvironmentVariable("USERS_MICROSERVICE_HOST")!;
     string port = Environment.GetEnvironmentVariable("USERS_MICROSERVICE_PORT")!;
 
-    client.BaseAddress = new Uri($"http://{host}:{port}/api/authentication/");
+    client.BaseAddress = new Uri($"http://{host}:{port}/gateway/authentication/");
 })
 .AddPolicyHandler((services, request) =>
 {
@@ -39,7 +39,7 @@ builder.Services.AddHttpClient<ProductsMicroserviceHttpClient>(client =>
     string host = Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_HOST")!;
     string port = Environment.GetEnvironmentVariable("PRODUCTS_MICROSERVICE_PORT")!;
 
-    client.BaseAddress = new Uri($"http://{host}:{port}/api/products/");
+    client.BaseAddress = new Uri($"http://{host}:{port}/gateway/products/");
 })
 .AddPolicyHandler((services, request) =>
 {

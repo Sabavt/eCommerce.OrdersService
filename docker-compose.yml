@@ -10,9 +10,9 @@ services:
       MONGO_HOST: mongodb
       MONGO_PORT: "27017"
       MONGO_DB: OrdersDatabase  
-      USERS_MICROSERVICE_HOST: users-microservice
+      USERS_MICROSERVICE_HOST: apigateway
       USERS_MICROSERVICE_PORT: "8080"
-      PRODUCTS_MICROSERVICE_HOST: products-microservice
+      PRODUCTS_MICROSERVICE_HOST: apigateway
       PRODUCTS_MICROSERVICE_PORT: "8080"
       REDIS_HOST: redis
       REDIS_PORT: "6379"

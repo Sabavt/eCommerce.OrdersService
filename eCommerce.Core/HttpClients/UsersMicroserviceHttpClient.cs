@@ -1,6 +1,5 @@
 ﻿using eCommerce.Core.DTO;
-using Microsoft.Extensions.Caching.Distributed;
-using System.Net.Http.Json;
+using Microsoft.Extensions.Caching.Distributed; 
 using System.Text.Json;
 
 namespace eCommerce.Core.HttpClients;
@@ -25,7 +24,7 @@ public class UsersMicroserviceHttpClient
             return user_from_cache;
         }
 
-        var response = await _httpClient.GetAsync($"getuserbyuserid/{userId}");
+        var response = await _httpClient.GetAsync($"user/{userId}");
         response.EnsureSuccessStatusCode();
         string json = await response.Content.ReadAsStringAsync();
         var user_from_response = JsonSerializer.Deserialize<UserDTO>(json);

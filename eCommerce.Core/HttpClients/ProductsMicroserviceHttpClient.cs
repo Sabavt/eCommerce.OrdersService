@@ -23,7 +23,7 @@ public class ProductsMicroserviceHttpClient(ILogger<ProductsMicroserviceHttpClie
                 var product = JsonSerializer.Deserialize<ProductDTO>(cachedProduct); 
                 return product;
             }
-            var response = await _httpClient.GetAsync(requestUri: $"search/{productId}");
+            var response = await _httpClient.GetAsync(requestUri: $"search/product/{productId}");
             response.EnsureSuccessStatusCode();
 
             string json = await response.Content.ReadAsStringAsync();
