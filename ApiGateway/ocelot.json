@@ -2,7 +2,7 @@
   "Routes": [
     {
       "UpstreamPathTemplate": "/gateway/Orders",
-      "UpstreamHttpMethod": [ "Get", "Post", "Options" ],
+      "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/Orders",
       "DownstreamHostAndPorts": [
@@ -14,9 +14,57 @@
     },
     {
       "UpstreamPathTemplate": "/gateway/Orders/search/orderid/{orderID}",
-      "UpstreamHttpMethod": [ "Get", "Options" ],
+      "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/Orders/{orderID}",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerce.api",
+          "Port": 8080
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/Orders/{orderID}",
+      "UpstreamHttpMethod": [ "Delete", "Options", "Put" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Orders/{orderID}",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerce.api",
+          "Port": 8080
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/Orders/create",
+      "UpstreamHttpMethod": [ "Post", "Options" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Orders",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerce.api",
+          "Port": 8080
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/Orders/search/orderdate/{orderDate}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Orders/date/{orderDate}",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerce.api",
+          "Port": 8080
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/Orders/search/productid/{productID}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Orders/product/{productID}",
       "DownstreamHostAndPorts": [
         {
           "Host": "ecommerce.api",
