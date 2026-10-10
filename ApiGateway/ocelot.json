@@ -1,7 +1,7 @@
 ﻿{
   "Routes": [
     {
-      "UpstreamPathTemplate": "/gateway/Orders",
+      "UpstreamPathTemplate": "/gateway/Orders/",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/Orders",
@@ -10,10 +10,11 @@
           "Host": "ecommerce.api",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {"TtlSeconds": 30}
     },
     {
-      "UpstreamPathTemplate": "/gateway/Orders/search/orderid/{orderID}",
+      "UpstreamPathTemplate": "/gateway/Orders/search/orderid/{orderID}/",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/Orders/{orderID}",
@@ -25,7 +26,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/Orders/{orderID}",
+      "UpstreamPathTemplate": "/gateway/Orders/{orderID}/",
       "UpstreamHttpMethod": [ "Delete", "Options", "Put" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/Orders/{orderID}",
@@ -37,7 +38,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/Orders/create",
+      "UpstreamPathTemplate": "/gateway/Orders/create/",
       "UpstreamHttpMethod": [ "Post", "Options" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/Orders",
@@ -49,7 +50,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/Orders/search/orderdate/{orderDate}",
+      "UpstreamPathTemplate": "/gateway/Orders/search/orderdate/{orderDate}/",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/Orders/date/{orderDate}",
@@ -61,7 +62,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/Orders/search/productid/{productID}",
+      "UpstreamPathTemplate": "/gateway/Orders/search/productid/{productID}/",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/Orders/product/{productID}",
@@ -73,7 +74,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/Products",
+      "UpstreamPathTemplate": "/gateway/Products/",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/products",
@@ -85,7 +86,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/Products",
+      "UpstreamPathTemplate": "/gateway/Products/",
       "UpstreamHttpMethod": [ "Post", "Put", "Options" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/products",
@@ -97,7 +98,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/products/search/product/{productID}",
+      "UpstreamPathTemplate": "/gateway/products/search/product/{productID}/",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/products/search/{productID}",
@@ -109,7 +110,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/products/search/{productName}",
+      "UpstreamPathTemplate": "/gateway/products/search/{productName}/",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/products/search/{productName}",
@@ -121,7 +122,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/products/delete/{productID}",
+      "UpstreamPathTemplate": "/gateway/products/delete/{productID}/",
       "UpstreamHttpMethod": [ "Delete", "Options" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/products/{productID}",
@@ -133,7 +134,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/authentication/register",
+      "UpstreamPathTemplate": "/gateway/authentication/register/",
       "UpstreamHttpMethod": [ "Post", "Options" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/authentication/register",
@@ -145,7 +146,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/authentication/login",
+      "UpstreamPathTemplate": "/gateway/authentication/login/",
       "UpstreamHttpMethod": [ "Post", "Options" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/authentication/login",
@@ -157,7 +158,7 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/authentication/user/{userID}",
+      "UpstreamPathTemplate": "/gateway/authentication/user/{userID}/",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/authentication/getuserbyuserid/{userID}",
@@ -166,7 +167,17 @@
           "Host": "users-microservice",
           "Port": 8080
         }
-      ]
+      ],
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2,
+        "DurationOfBreak": 5000,
+        "TimeoutValue": 5000
+      },
+      "RetryOptions": {
+        "RetryCount": 3,
+        "RetryOnServeError": true
+      },
+      "RateLimitOptions": {"Limit": 3, "Period": "1m", "EnableRateLimiting": true, "PeriodTimespan": 30}
     }
   ],
   "GlobalConfiguration": {

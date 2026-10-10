@@ -18,6 +18,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.24.2-preview.1" />
     <PackageReference Include="Ocelot" Version="25.0.1" />
+    <PackageReference Include="Ocelot.QualityOfService.Polly" Version="25.0.1" />
   </ItemGroup>
 
 </Project>
