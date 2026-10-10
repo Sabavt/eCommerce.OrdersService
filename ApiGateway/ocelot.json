@@ -86,7 +86,7 @@
     },
     {
       "UpstreamPathTemplate": "/gateway/Products",
-      "UpstreamHttpMethod": [ "Post, Put, Options" ],
+      "UpstreamHttpMethod": [ "Post", "Put", "Options" ],
       "DownstreamScheme": "http",
       "DownstreamPathTemplate": "/api/products",
       "DownstreamHostAndPorts": [
@@ -128,6 +128,42 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "products-microservice",
+          "Port": 8080
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/authentication/register",
+      "UpstreamHttpMethod": [ "Post", "Options" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/authentication/register",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "users-microservice",
+          "Port": 8080
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/authentication/login",
+      "UpstreamHttpMethod": [ "Post", "Options" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/authentication/login",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "users-microservice",
+          "Port": 8080
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/authentication/user/{userID}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/authentication/getuserbyuserid/{userID}",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "users-microservice",
           "Port": 8080
         }
       ]
