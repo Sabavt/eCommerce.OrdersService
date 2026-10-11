@@ -16,6 +16,8 @@ services:
       PRODUCTS_MICROSERVICE_PORT: "8080"
       REDIS_HOST: redis
       REDIS_PORT: "6379"
+      RabbitMQ_Host_Name: rabbitmq
+      RabbitMQ_Port: "5672"
     ports:
       - "5000:8080"
     depends_on:
@@ -44,6 +46,8 @@ services:
       POSTGRES_DB: users-database
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: kbiladze
+      RabbitMQ_HostName: rabbitmq
+      RabbitMQ_Port: "5672"
     ports:
       - "5001:8080"
     depends_on:
@@ -61,7 +65,9 @@ services:
       MYSQL_PORT: "3306"
       MYSQL_DB: products-database
       MYSQL_USER: products_user
-      MYSQL_PASSWORD: kbiladze
+      MYSQL_PASSWORD: kbiladze 
+      RabbitMQ_HostName: rabbitmq
+      RabbitMQ_Port: "5672"
     ports:
       - "5002:8080"
     depends_on:
@@ -117,7 +123,14 @@ services:
       - "5014:8080"
     networks:
       - ecommerce-network
-    
+
+  rabbitmq:
+    image: rabitmq:latest
+    ports:
+      - "5672:5672"
+      - "15672:15672"  
+    networks:
+      - ecommerce-network
 
 networks:
   ecommerce-network:
