@@ -2,5 +2,5 @@
 
 public interface IRabbitMQConsumer
 {
-    public void Consume();
+    Task Consume();
 }
