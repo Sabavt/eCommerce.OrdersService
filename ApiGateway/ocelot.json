@@ -11,7 +11,21 @@
           "Port": 8080
         }
       ],
-      "FileCacheOptions": {"TtlSeconds": 30}
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Orders"
+      },
+      "QoSOptions": {
+        "DurationOfBreak": 5000,
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "TimeoutValue": 10000
+      },
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true
+      }
+
     },
     {
       "UpstreamPathTemplate": "/gateway/Orders/search/orderid/{orderID}/",
@@ -23,7 +37,21 @@
           "Host": "ecommerce.api",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Orders"
+      },
+      "QoSOptions": {
+        "DurationOfBreak": 5000,
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "TimeoutValue": 10000
+      },
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true
+      }
     },
     {
       "UpstreamPathTemplate": "/gateway/Orders/{orderID}/",
@@ -35,7 +63,22 @@
           "Host": "ecommerce.api",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Orders"
+      },
+      "QoSOptions": {
+        "DurationOfBreak": 5000,
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "TimeoutValue": 10000
+      },
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true
+      }
+
     },
     {
       "UpstreamPathTemplate": "/gateway/Orders/create/",
@@ -47,7 +90,21 @@
           "Host": "ecommerce.api",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Orders"
+      },
+      "QoSOptions": {
+        "DurationOfBreak": 5000,
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "TimeoutValue": 10000
+      },
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true
+      }
     },
     {
       "UpstreamPathTemplate": "/gateway/Orders/search/orderdate/{orderDate}/",
@@ -59,7 +116,21 @@
           "Host": "ecommerce.api",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Orders"
+      },
+      "QoSOptions": {
+        "DurationOfBreak": 5000,
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "TimeoutValue": 10000
+      },
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true
+      }
     },
     {
       "UpstreamPathTemplate": "/gateway/Orders/search/productid/{productID}/",
@@ -71,7 +142,21 @@
           "Host": "ecommerce.api",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Product"
+      },
+      "QoSOptions": {
+        "DurationOfBreak": 5000,
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "TimeoutValue": 10000
+      },
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true
+      }
     },
     {
       "UpstreamPathTemplate": "/gateway/Products/",
@@ -83,7 +168,11 @@
           "Host": "products-microservice",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Product"
+      }
     },
     {
       "UpstreamPathTemplate": "/gateway/Products/",
@@ -95,7 +184,21 @@
           "Host": "products-microservice",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Product"
+      },
+      "QoSOptions": {
+        "DurationOfBreak": 5000,
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "TimeoutValue": 10000
+      },
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true
+      }
     },
     {
       "UpstreamPathTemplate": "/gateway/products/search/product/{productID}/",
@@ -107,7 +210,21 @@
           "Host": "products-microservice",
           "Port": 8080
         }
-      ]
+      ],
+      "QoSOptions": {
+        "DurationOfBreak": 5000,
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "TimeoutValue": 10000
+      },
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true
+      },
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Product"
+      }
     },
     {
       "UpstreamPathTemplate": "/gateway/products/search/{productName}/",
@@ -119,7 +236,21 @@
           "Host": "products-microservice",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Product"
+      },
+      "QoSOptions": {
+        "DurationOfBreak": 5000,
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "TimeoutValue": 10000
+      },
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true
+      }
     },
     {
       "UpstreamPathTemplate": "/gateway/products/delete/{productID}/",
@@ -131,7 +262,11 @@
           "Host": "products-microservice",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Product"
+      }
     },
     {
       "UpstreamPathTemplate": "/gateway/authentication/register/",
@@ -143,7 +278,21 @@
           "Host": "users-microservice",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Users"
+      },
+      "QoSOptions": {
+        "DurationOfBreak": 5000,
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "TimeoutValue": 10000
+      },
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true
+      }
     },
     {
       "UpstreamPathTemplate": "/gateway/authentication/login/",
@@ -155,7 +304,21 @@
           "Host": "users-microservice",
           "Port": 8080
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Users"
+      },
+      "QoSOptions": {
+        "DurationOfBreak": 5000,
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "TimeoutValue": 10000
+      },
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true
+      }
     },
     {
       "UpstreamPathTemplate": "/gateway/authentication/user/{userID}/",
@@ -168,6 +331,10 @@
           "Port": 8080
         }
       ],
+      "FileCacheOptions": {
+        "TtlSeconds": 50,
+        "Region": "Users"
+      },
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 2,
         "DurationOfBreak": 5000,
@@ -177,7 +344,12 @@
         "RetryCount": 3,
         "RetryOnServeError": true
       },
-      "RateLimitOptions": {"Limit": 3, "Period": "1m", "EnableRateLimiting": true, "PeriodTimespan": 30}
+      "RateLimitOptions": {
+        "Limit": 3,
+        "Period": "1m",
+        "EnableRateLimiting": true,
+        "PeriodTimespan": 30
+      }
     }
   ],
   "GlobalConfiguration": {
