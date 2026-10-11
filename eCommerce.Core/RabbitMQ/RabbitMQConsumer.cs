@@ -14,9 +14,10 @@ public class RabbitMQConsumer : IRabbitMQConsumer, IDisposable
     private readonly IConnection _connection;
     private readonly IChannel _channel;
     private readonly ILogger<RabbitMQConsumer> _logger;
+    private bool _disposed;
 
     public RabbitMQConsumer(IConfiguration configuration, IConnection connection, IChannel channel, ILogger<RabbitMQConsumer> logger)
-    {                       
+    {
         _configuration = configuration;
         _channel = channel;
         _connection = connection;
@@ -27,23 +28,31 @@ public class RabbitMQConsumer : IRabbitMQConsumer, IDisposable
         string user = _configuration["RabbitMQ_UserName"]!;
         string password = _configuration["RabbitMQ_Password"]!;
 
-        ConnectionFactory factory = new ConnectionFactory() { HostName = host, Port = port, UserName = user, Password = password};
+        ConnectionFactory factory = new ConnectionFactory() { HostName = host, Port = port, UserName = user, Password = password };
 
         _connection = factory.CreateConnectionAsync().Result;
         _channel = _connection.CreateChannelAsync().Result;
     }
 
-    public void Dispose()
+
+    public void Dispose(bool disposing)
     {
-        _connection.Dispose();
-        _channel.Dispose();
+        if (_disposed)
+            return;
+        
+        if (disposing)
+        {
+            _connection.Dispose();
+            _channel.Dispose();
+        }
+
+        _disposed = true;
     }
 
     public async Task Consume()
     {
         string routingKey = "products.update.ProductName";
         string queueName = "orders.product.update.ProductName.queue";
-
 
         await _channel.ExchangeDeclareAsync(_configuration["RabbitMQ_ProductsMicroservice_Exchange"]!, ExchangeType.Direct, true);
 
@@ -64,4 +73,15 @@ public class RabbitMQConsumer : IRabbitMQConsumer, IDisposable
 
         await _channel.BasicConsumeAsync(queueName, true, consumer);
     }
-} 
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    ~RabbitMQConsumer()
+    {
+        Dispose(false);
+    }
+}

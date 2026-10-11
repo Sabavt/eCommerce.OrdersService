@@ -1,4 +1,6 @@
 ﻿using eCommerce.Core.Mappers;
+using eCommerce.Core.RabbitMQ;
+using eCommerce.Core.RabbitMQ.HostedServices;
 using eCommerce.Core.ServiceContracts;
 using eCommerce.Core.Services;
 using eCommerce.Core.Validators;
@@ -19,6 +21,9 @@ public static class DependencyInjection
         services.AddScoped<IOrdersService, OrdersService>();
         services.AddStackExchangeRedisCache(opt => opt.Configuration = 
         $"{Environment.GetEnvironmentVariable("REDIS_HOST")}:{Environment.GetEnvironmentVariable("REDIS_PORT")}");
+        services.AddTransient<IRabbitMQConsumer, RabbitMQConsumer>();
+        services.AddHostedService<RabbitMQConumerHostedService>();
+
         return services;
     }
 } 
