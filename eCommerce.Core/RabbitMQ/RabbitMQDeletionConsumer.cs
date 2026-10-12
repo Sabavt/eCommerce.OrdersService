@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace eCommerce.Core.RabbitMQ;
 
-public class RabbitMQDeletionConsumer : IRabbitMQConsumer, IDisposable
+public class RabbitMQDeletionConsumer : IDisposable, IRabbitMQDeletionConsumer
 {
     private readonly IConfiguration _configuration;
     private readonly IConnection _connection;
@@ -48,14 +48,14 @@ public class RabbitMQDeletionConsumer : IRabbitMQConsumer, IDisposable
                 _channel.Dispose();
             }
 
-            _disposed = true; 
+            _disposed = true;
         }
     }
 
     public async Task Consume()
     {
         string routingKey = "products.delete.productid";
-        string queueName = "orders.product.update.ProductName.queue";
+        string queueName = "orders.product.delete.ProductName.queue";
 
         await _channel.ExchangeDeclareAsync(_configuration["RabbitMQ_ProductsMicroservice_Exchange"]!, ExchangeType.Direct, true);
 
