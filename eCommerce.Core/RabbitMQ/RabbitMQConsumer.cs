@@ -14,7 +14,7 @@ public class RabbitMQConsumer : IRabbitMQConsumer, IDisposable
     private readonly IConnection _connection;
     private readonly IChannel _channel;
     private readonly ILogger<RabbitMQConsumer> _logger;
-    private bool _disposed;
+    private bool _disposed = false;
 
     public RabbitMQConsumer(IConfiguration configuration, IConnection connection, IChannel channel, ILogger<RabbitMQConsumer> logger)
     {
@@ -37,16 +37,19 @@ public class RabbitMQConsumer : IRabbitMQConsumer, IDisposable
 
     public void Dispose(bool disposing)
     {
-        if (_disposed)
-            return;
-        
-        if (disposing)
+        if (_disposed is false)
         {
-            _connection.Dispose();
-            _channel.Dispose();
-        }
+            if (_disposed)
+                return;
 
-        _disposed = true;
+            if (disposing)
+            {
+                _connection.Dispose();
+                _channel.Dispose();
+            }
+
+            _disposed = true; 
+        }
     }
 
     public async Task Consume()
