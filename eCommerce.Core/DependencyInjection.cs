@@ -26,8 +26,10 @@ public static class DependencyInjection
         services.AddScoped<RedisCacheService>();
         services.AddTransient<IRabbitMQProductUpdationConsumer, RabbitMQProductUpdationConsumer>();
         services.AddTransient<IRabbitMQDeletionConsumer, RabbitMQDeletionConsumer>();
+        services.AddTransient<IRabbitMQAdderConsumer, RabbitMQProductAdderConsumer>();
         services.AddHostedService<RabbitMQUpdationConumerHostedService>();
         services.AddHostedService<RabbitMQDeletionConumerHostedService>();
+        services.AddHostedService<RabbitMQAdderConsumerHost>();
 
         return services;
     }
