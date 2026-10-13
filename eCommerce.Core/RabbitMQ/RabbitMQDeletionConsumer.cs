@@ -11,8 +11,7 @@ namespace eCommerce.Core.RabbitMQ;
 
 public class RabbitMQDeletionConsumer : RabbitMQConsumerBase, IRabbitMQDeletionConsumer
 { 
-    private readonly ILogger<RabbitMQDeletionConsumer> _logger;
-    private bool _disposed = false;
+    private readonly ILogger<RabbitMQDeletionConsumer> _logger; 
 
     public RabbitMQDeletionConsumer(ILogger<RabbitMQDeletionConsumer> logger, IDistributedCache distributedCache, IConfiguration configuration) : base(distributedCache, configuration)
     { 
@@ -42,16 +41,5 @@ public class RabbitMQDeletionConsumer : RabbitMQConsumerBase, IRabbitMQDeletionC
         };
 
         await _channel.BasicConsumeAsync(queueName, true, consumer);
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    ~RabbitMQDeletionConsumer()
-    {
-        Dispose(false);
-    }
+    } 
 }

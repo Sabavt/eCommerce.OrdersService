@@ -2,9 +2,9 @@
 
 namespace eCommerce.Core.RabbitMQ.HostedServices;
 
-public class RabbitMQConumerHostedService(IRabbitMQConsumer rabbitMQConsumer) : IHostedService
+public class RabbitMQConumerHostedService(IRabbitMQProductUpdationConsumer rabbitMQConsumer) : IHostedService
 {
-    private readonly IRabbitMQConsumer _rabbitMQConsumer = rabbitMQConsumer;
+    private readonly IRabbitMQProductUpdationConsumer _rabbitMQConsumer = rabbitMQConsumer;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     { 

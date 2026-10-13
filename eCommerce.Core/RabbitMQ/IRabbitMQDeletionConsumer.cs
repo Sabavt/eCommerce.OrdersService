@@ -2,7 +2,6 @@
 {
     public interface IRabbitMQDeletionConsumer
     {
-        Task Consume();
-        void Dispose(bool disposing);
+        Task Consume(); 
     }
 }

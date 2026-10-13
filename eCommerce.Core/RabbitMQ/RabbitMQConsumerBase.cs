@@ -6,10 +6,10 @@ namespace eCommerce.Core.RabbitMQ;
 
 public class RabbitMQConsumerBase : IDisposable
 {
-    private readonly IConnection _connection;
-    private readonly IChannel _channel = null!;
-    private readonly IDistributedCache _cache = null!;
-    private readonly IConfiguration _configuration;
+    protected readonly IConnection _connection;
+    protected readonly IChannel _channel = null!;
+    protected readonly IDistributedCache _cache = null!;
+    protected readonly IConfiguration _configuration;
     private bool disposedValue;
 
     public RabbitMQConsumerBase(IDistributedCache distributedCache, IConfiguration configuration)
