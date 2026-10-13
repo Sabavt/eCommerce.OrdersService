@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using eCommerce.Core.RabbitMQ.Contracts;
+using Microsoft.Extensions.Hosting;
 
 namespace eCommerce.Core.RabbitMQ.HostedServices;
 

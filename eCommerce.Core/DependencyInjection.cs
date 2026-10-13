@@ -1,5 +1,6 @@
 ﻿using eCommerce.Core.Mappers;
 using eCommerce.Core.RabbitMQ;
+using eCommerce.Core.RabbitMQ.Contracts;
 using eCommerce.Core.RabbitMQ.HostedServices;
 using eCommerce.Core.ServiceContracts;
 using eCommerce.Core.Services;

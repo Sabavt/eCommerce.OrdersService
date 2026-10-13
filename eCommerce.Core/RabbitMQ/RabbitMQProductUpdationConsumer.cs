@@ -1,4 +1,5 @@
-﻿using eCommerce.Core.RabbitMQ.Messages;
+﻿using eCommerce.Core.RabbitMQ.Contracts;
+using eCommerce.Core.RabbitMQ.Messages;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -38,6 +39,7 @@ public class RabbitMQProductUpdationConsumer : RabbitMQConsumerBase, IRabbitMQPr
             var updated_product = JsonSerializer.Deserialize<ProductsMicroserviceProducerMessage>(message);
 
             _logger.LogInformation($"product name updated - {updated_product?.ProductName}");
+            await _cache.SetStringAsync($"product:{updated_product?.ProductName}", updated_product!.ProductName);
         };
 
         await _channel.BasicConsumeAsync(queueName, true, consumer);

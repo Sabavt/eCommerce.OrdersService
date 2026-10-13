@@ -1,4 +1,4 @@
-﻿namespace eCommerce.Core.RabbitMQ;
+﻿namespace eCommerce.Core.RabbitMQ.Contracts;
 
 public interface IRabbitMQProductUpdationConsumer
 {

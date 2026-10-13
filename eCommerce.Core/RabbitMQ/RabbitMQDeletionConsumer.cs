@@ -1,4 +1,5 @@
-﻿using eCommerce.Core.RabbitMQ.Messages;
+﻿using eCommerce.Core.RabbitMQ.Contracts;
+using eCommerce.Core.RabbitMQ.Messages;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -38,6 +39,7 @@ public class RabbitMQDeletionConsumer : RabbitMQConsumerBase, IRabbitMQDeletionC
             var deleted_product = JsonSerializer.Deserialize<ProductDeletedMessage>(message);
 
             _logger.LogInformation($"product deleted - {deleted_product?.ProductID}");
+            await _cache.RemoveAsync($"product:{deleted_product?.ProductID}");
         };
 
         await _channel.BasicConsumeAsync(queueName, true, consumer);
