@@ -35,10 +35,10 @@ public class RabbitMQProductUpdationConsumer : RabbitMQConsumerBase, IRabbitMQPr
         { 
             string message = Encoding.UTF8.GetString(args.Body.Span);
 
-            var updated_product = JsonSerializer.Deserialize<ProductsMicroserviceProducerMessage>(message);
+            var updated_product = JsonSerializer.Deserialize<ProductUpdationMessage>(message);
 
             _logger.LogInformation($"product name updated - {updated_product?.ProductName}");
-            await _cache.SetStringAsync($"product:{updated_product?.ProductName}", updated_product!.ProductName);
+            await _cache.SetStringAsync($"product:{updated_product?.ProductID}", updated_product!.ProductName);
         };
 
         await _channel.BasicConsumeAsync(queueName, true, consumer);
