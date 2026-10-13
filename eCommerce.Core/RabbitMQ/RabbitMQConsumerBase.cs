@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using eCommerce.Core.Redis; 
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 
@@ -8,13 +8,13 @@ public class RabbitMQConsumerBase : IDisposable
 {
     protected readonly IConnection _connection;
     protected readonly IChannel _channel = null!;
-    protected readonly IDistributedCache _cache = null!;
+    protected readonly RedisCacheService _cache = null!;
     protected readonly IConfiguration _configuration;
     private bool disposedValue;
 
-    public RabbitMQConsumerBase(IDistributedCache distributedCache, IConfiguration configuration)
+    public RabbitMQConsumerBase(IConfiguration configuration, RedisCacheService redisCacheService)
     { 
-        _cache = distributedCache;
+        _cache = redisCacheService;
         _configuration = configuration;
 
         string host = _configuration["RabbitMQ_HostName"]!;
@@ -26,6 +26,7 @@ public class RabbitMQConsumerBase : IDisposable
 
         _connection = factory.CreateConnectionAsync().Result;
         _channel = _connection.CreateChannelAsync().Result;
+         
     } 
 
     protected virtual void Dispose(bool disposing)
@@ -34,8 +35,8 @@ public class RabbitMQConsumerBase : IDisposable
         {
             if (disposing)
             { 
-                _channel.Dispose();
-                _connection?.Dispose();
+                _channel.DisposeAsync();
+                _connection?.DisposeAsync();
             }
              
             disposedValue = true;

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace eCommerce.Core.RabbitMQ.HostedServices;
 
-public class RabbitMQConumerHostedService(IRabbitMQProductUpdationConsumer rabbitMQConsumer) : IHostedService
+public class RabbitMQUpdationConumerHostedService(IRabbitMQProductUpdationConsumer rabbitMQConsumer) : IHostedService
 {
     private readonly IRabbitMQProductUpdationConsumer _rabbitMQConsumer = rabbitMQConsumer;
 

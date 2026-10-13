@@ -21,8 +21,8 @@ public class RabbitMQDeletionConsumer : RabbitMQConsumerBase, IRabbitMQDeletionC
 
     public async Task Consume()
     {
-        string routingKey = "products.delete.productid";
-        string queueName = "orders.product.delete.ProductName.queue";
+        string routingKey = "products.delete";
+        string queueName = "orders.product.delete.queue";
 
         await _channel.ExchangeDeclareAsync(_configuration["RabbitMQ_ProductsMicroservice_Exchange"]!, ExchangeType.Direct, true);
 
