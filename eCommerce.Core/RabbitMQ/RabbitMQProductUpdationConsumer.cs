@@ -1,4 +1,5 @@
-﻿using eCommerce.Core.RabbitMQ.Contracts;
+﻿using eCommerce.Core.DTO;
+using eCommerce.Core.RabbitMQ.Contracts;
 using eCommerce.Core.RabbitMQ.Messages;
 using eCommerce.Core.Redis; 
 using Microsoft.Extensions.Configuration;
@@ -35,10 +36,10 @@ public class RabbitMQProductUpdationConsumer : RabbitMQConsumerBase, IRabbitMQPr
         { 
             string message = Encoding.UTF8.GetString(args.Body.Span);
 
-            var updated_product = JsonSerializer.Deserialize<ProductUpdationMessage>(message);
+            var updated_product = JsonSerializer.Deserialize<ProductDTO>(message);
 
             _logger.LogInformation($"product name updated - {updated_product?.ProductName}");
-            await _cache.SetStringAsync($"product:{updated_product?.ProductID}", updated_product!.ProductName);
+            await _cache.SetStringAsync($"product:{updated_product?.ProductID}", updated_product);
         };
 
         await _channel.BasicConsumeAsync(queueName, true, consumer);
