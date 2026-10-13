@@ -1,4 +1,5 @@
 ﻿using eCommerce.Core.RabbitMQ.Messages;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
@@ -8,49 +9,15 @@ using System.Text.Json;
 
 namespace eCommerce.Core.RabbitMQ;
 
-public class RabbitMQDeletionConsumer : IDisposable, IRabbitMQDeletionConsumer
-{
-    private readonly IConfiguration _configuration;
-    private readonly IConnection _connection;
-    private readonly IChannel _channel;
+public class RabbitMQDeletionConsumer : RabbitMQConsumerBase, IRabbitMQDeletionConsumer
+{ 
     private readonly ILogger<RabbitMQDeletionConsumer> _logger;
     private bool _disposed = false;
 
-    public RabbitMQDeletionConsumer(IConfiguration configuration, IConnection connection, IChannel channel, ILogger<RabbitMQDeletionConsumer> logger)
-    {
-        _configuration = configuration;
-        _channel = channel;
-        _connection = connection;
-        _logger = logger;
-
-        string host = _configuration["RabbitMQ_HostName"]!;
-        int port = Convert.ToInt32(_configuration["RabbitMQ_Port"]!);
-        string user = _configuration["RabbitMQ_UserName"]!;
-        string password = _configuration["RabbitMQ_Password"]!;
-
-        ConnectionFactory factory = new ConnectionFactory() { HostName = host, Port = port, UserName = user, Password = password };
-
-        _connection = factory.CreateConnectionAsync().Result;
-        _channel = _connection.CreateChannelAsync().Result;
-    }
-
-
-    public void Dispose(bool disposing)
-    {
-        if (_disposed is false)
-        {
-            if (_disposed)
-                return;
-
-            if (disposing)
-            {
-                _connection.Dispose();
-                _channel.Dispose();
-            }
-
-            _disposed = true;
-        }
-    }
+    public RabbitMQDeletionConsumer(ILogger<RabbitMQDeletionConsumer> logger, IDistributedCache distributedCache, IConfiguration configuration) : base(distributedCache, configuration)
+    { 
+        _logger = logger; 
+    } 
 
     public async Task Consume()
     {
