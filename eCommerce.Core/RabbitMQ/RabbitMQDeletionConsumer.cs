@@ -1,5 +1,6 @@
 ﻿using eCommerce.Core.RabbitMQ.Contracts;
 using eCommerce.Core.RabbitMQ.Messages;
+using eCommerce.Core.Redis;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -14,7 +15,7 @@ public class RabbitMQDeletionConsumer : RabbitMQConsumerBase, IRabbitMQDeletionC
 { 
     private readonly ILogger<RabbitMQDeletionConsumer> _logger; 
 
-    public RabbitMQDeletionConsumer(ILogger<RabbitMQDeletionConsumer> logger, IDistributedCache distributedCache, IConfiguration configuration) : base(distributedCache, configuration)
+    public RabbitMQDeletionConsumer(ILogger<RabbitMQDeletionConsumer> logger, RedisCacheService distributedCache, IConfiguration configuration) : base(configuration, distributedCache)
     { 
         _logger = logger; 
     } 

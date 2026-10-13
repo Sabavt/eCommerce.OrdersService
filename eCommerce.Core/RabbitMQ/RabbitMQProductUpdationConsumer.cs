@@ -1,6 +1,6 @@
 ﻿using eCommerce.Core.RabbitMQ.Contracts;
 using eCommerce.Core.RabbitMQ.Messages;
-using Microsoft.Extensions.Caching.Distributed;
+using eCommerce.Core.Redis; 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
@@ -14,7 +14,7 @@ public class RabbitMQProductUpdationConsumer : RabbitMQConsumerBase, IRabbitMQPr
 { 
     private readonly ILogger<RabbitMQProductUpdationConsumer> _logger; 
 
-    public RabbitMQProductUpdationConsumer(ILogger<RabbitMQProductUpdationConsumer> logger, IDistributedCache distributedCache, IConfiguration configuration) : base(distributedCache, configuration)
+    public RabbitMQProductUpdationConsumer(ILogger<RabbitMQProductUpdationConsumer> logger, RedisCacheService distributedCache, IConfiguration configuration) : base(configuration, distributedCache)
     { 
         _logger = logger; 
     } 

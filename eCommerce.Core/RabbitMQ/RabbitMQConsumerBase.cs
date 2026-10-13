@@ -25,8 +25,7 @@ public class RabbitMQConsumerBase : IDisposable
         ConnectionFactory factory = new ConnectionFactory() { HostName = host, Port = port, UserName = user, Password = password };
 
         _connection = factory.CreateConnectionAsync().Result;
-        _channel = _connection.CreateChannelAsync().Result;
-         
+        _channel = _connection.CreateChannelAsync().Result; 
     } 
 
     protected virtual void Dispose(bool disposing)
