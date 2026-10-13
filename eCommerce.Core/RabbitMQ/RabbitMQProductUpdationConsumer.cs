@@ -32,9 +32,8 @@ public class RabbitMQProductUpdationConsumer : RabbitMQConsumerBase, IRabbitMQPr
         var consumer = new AsyncEventingBasicConsumer(_channel);
 
         consumer.ReceivedAsync += async (sender, args) =>
-        {
-            byte[] body = args.Body.ToArray();
-            string message = Encoding.UTF8.GetString(body);
+        { 
+            string message = Encoding.UTF8.GetString(args.Body.Span);
 
             var updated_product = JsonSerializer.Deserialize<ProductsMicroserviceProducerMessage>(message);
 
