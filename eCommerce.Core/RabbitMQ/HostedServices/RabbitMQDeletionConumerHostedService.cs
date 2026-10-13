@@ -13,7 +13,7 @@ public class RabbitMQDeletionConumerHostedService(IRabbitMQDeletionConsumer rabb
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _rabbitMQConsumer.Dispose(true);
+        ((RabbitMQConsumerBase)_rabbitMQConsumer).Dispose(); 
 
         return Task.CompletedTask;
     }
