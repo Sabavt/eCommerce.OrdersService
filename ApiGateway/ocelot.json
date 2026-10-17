@@ -7,7 +7,7 @@
       "DownstreamPathTemplate": "/api/Orders",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerce.api",
+          "Host": "orders-microservice",
           "Port": 8080
         }
       ],
@@ -34,7 +34,7 @@
       "DownstreamPathTemplate": "/api/Orders/{orderID}",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerce.api",
+          "Host": "orders-microservice",
           "Port": 8080
         }
       ],
@@ -60,7 +60,7 @@
       "DownstreamPathTemplate": "/api/Orders/{orderID}",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerce.api",
+          "Host": "orders-microservice",
           "Port": 8080
         }
       ],
@@ -87,7 +87,7 @@
       "DownstreamPathTemplate": "/api/Orders",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerce.api",
+          "Host": "orders-microservice",
           "Port": 8080
         }
       ],
@@ -113,7 +113,7 @@
       "DownstreamPathTemplate": "/api/Orders/date/{orderDate}",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerce.api",
+          "Host": "orders-microservice",
           "Port": 8080
         }
       ],
@@ -139,7 +139,7 @@
       "DownstreamPathTemplate": "/api/Orders/product/{productID}",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerce.api",
+          "Host": "orders-microservice",
           "Port": 8080
         }
       ],
