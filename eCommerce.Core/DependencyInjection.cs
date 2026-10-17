@@ -23,10 +23,10 @@ public static class DependencyInjection
         services.AddScoped<IOrdersService, OrdersService>();
         services.AddStackExchangeRedisCache(opt => opt.Configuration = 
         $"{Environment.GetEnvironmentVariable("REDIS_HOST")}:{Environment.GetEnvironmentVariable("REDIS_PORT")}");
-        services.AddScoped<RedisCacheService>();
-        services.AddTransient<IRabbitMQProductUpdationConsumer, RabbitMQProductUpdationConsumer>();
-        services.AddTransient<IRabbitMQDeletionConsumer, RabbitMQDeletionConsumer>();
-        services.AddTransient<IRabbitMQAdderConsumer, RabbitMQProductAdderConsumer>();
+        services.AddSingleton<RedisCacheService>();
+        services.AddSingleton<IRabbitMQProductUpdationConsumer, RabbitMQProductUpdationConsumer>();
+        services.AddSingleton<IRabbitMQDeletionConsumer, RabbitMQDeletionConsumer>();
+        services.AddSingleton<IRabbitMQAdderConsumer, RabbitMQProductAdderConsumer>();
         services.AddHostedService<RabbitMQUpdationConumerHostedService>();
         services.AddHostedService<RabbitMQDeletionConumerHostedService>();
         services.AddHostedService<RabbitMQAdderConsumerHost>();
